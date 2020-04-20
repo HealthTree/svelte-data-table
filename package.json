@@ -1,0 +1,71 @@
+{
+	"description": "TODO",
+	"devDependencies": {
+		"@babel/core": "7.9.0",
+		"@babel/plugin-syntax-dynamic-import": "7.8.3",
+		"@babel/plugin-transform-runtime": "7.9.0",
+		"@babel/preset-env": "7.9.5",
+		"@testing-library/cypress": "6.0.0",
+		"autoprefixer": "9.7.6",
+		"cypress": "4.4.0",
+		"eslint": "6.8.0",
+		"eslint-config-prettier": "6.10.1",
+		"eslint-plugin-cypress": "2.10.3",
+		"eslint-plugin-svelte3": "2.7.3",
+		"husky": "4.2.5",
+		"lint-staged": "10.1.6",
+		"lodash": "4.17.15",
+		"postcss": "7.0.27",
+		"postcss-load-config": "2.1.0",
+		"prettier": "2.0.4",
+		"rollup": "2.6.1",
+		"rollup-plugin-babel": "4.4.0",
+		"rollup-plugin-commonjs": "10.1.0",
+		"rollup-plugin-livereload": "1.2.0",
+		"rollup-plugin-node-resolve": "5.2.0",
+		"rollup-plugin-svelte": "5.2.1",
+		"rollup-plugin-terser": "5.3.0",
+		"sirv-cli": "0.4.5",
+		"start-server-and-test": "1.11.0",
+		"svelte": "3.20.1",
+		"svelte-preprocess": "3.7.1"
+	},
+	"files": [
+		"src/components",
+		"dist"
+	],
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"keywords": [
+		"svelte"
+	],
+	"license": "TODO",
+	"lint-staged": {
+		"*.{html, css, scss, stylus, js, ts, json, yml, md}": [
+			"prettier --write",
+			"git add"
+		],
+		"*.{js, svelte}": [
+			"eslint --fix",
+			"git add"
+		]
+	},
+	"main": "dist/index.min.js",
+	"module": "dist/index.min.mjs",
+	"name": "TODO",
+	"repository": "TODO",
+	"scripts": {
+		"build": "rollup -c",
+		"cy:open": "cypress open",
+		"cy:run": "cypress run",
+		"dev": "rollup -c -w",
+		"lint": "eslint --color --ignore-path .gitignore .",
+		"prepublishOnly": "npm run build",
+		"start": "sirv public",
+		"test": "start-server-and-test dev http://localhost:5000 cy:run"
+	},
+	"svelte": "src/components/components.module.js"
+}
