@@ -2,7 +2,6 @@
     import _ from 'lodash';
     import Paginator from './Paginator.svelte';
 
-    export let search = true;
     export let columns = [];
     export let rows = [];
 

@@ -1,6 +1,5 @@
 <script>
   import { DataTable } from './components/components.module.js';
-  import { Paginator } from './components/components.module.js';
   import CustomCol1 from './CustomCol1.svelte';
 
   const columns = [
