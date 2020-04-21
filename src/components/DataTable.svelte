@@ -1,62 +1,80 @@
 <script>
     import _ from 'lodash';
-    import Paginator from './Paginator.svelte';
+    import Paginator, {resetPaginator} from './Paginator.svelte';
+    import Search from './Search.svelte';
+    import Fuse  from 'fuse.js';
 
     export let columns = [];
     export let rows = [];
 
-
     export let paginated = true;
     export let itemsPerPages = [5,10,15];
 
+    export let searchable = false;
+    export let fuseConfig = {
+    }
+
     let paginator = {
         startIndex: 0,
-        paginatorEndIndex: null,
-        itemsPerPages
-    }
-    let processedRows = {
-        root: [],
-        filtered: [],
-        paginated: []
+        endIndex: null,
+        itemsPerPages,
     };
+    let processedRows = {
+        filtered: [],
+        paginated: [],
+    };
+    let fuse;
 
 
     function initStates() {
-        processedRows.root = rows;
-        paginator.startIndex = 0;
-        paginator.endIndex = (paginated) ? null: processedRows.root.length;
         initColumnProperties(columns);
+        initPaginator();
+        initPreprocessRows();
+        fuse = new Fuse(rows, fuseConfig || {});
     }
+    function initPaginator() {
+        paginator.startIndex = 0;
+        paginator.endIndex = (paginated) ? itemsPerPages[0] -1 : rows.length- 1;
+    }
+    function initPreprocessRows() {
+        processedRows.filtered = (searchable) ? [...rows] : rows;
+        updatePaginatedRows();
+    }
+
     function initColumnProperties(columns) {
         columns.forEach(col => {
             col['_dTProperties'] = {};
         });
     }
-    function resetOtherSorts(excludeIndex) {
+
+    function resetSorts(excludeIndex) {
         columns.forEach((col, index) => {
             if (excludeIndex !== index) {
                 col._dTProperties.currentSort = null;
             }
         });
     }
-    function setSortIcon(index, column) {
+
+    function setSortIcon(column) {
         if (!column.sortable) return;
         column._dTProperties.currentSort = column._dTProperties.currentSort === 'asc' ? 'desc' : 'asc';
     }
+
     function sortByColumn(columnIndex, column) {
         const currentSort = column._dTProperties.currentSort;
         const field = column.field;
         if (column.sortFnc) {
-            processedRows.root =  processedRows.root.sort((a, b) => column.sortFnc(a, b, currentSort));
+            processedRows.filtered = processedRows.filtered.sort((a, b) => column.sortFnc(a, b, currentSort));
         } else {
             if (column.numeric) {
-                processedRows.root =  processedRows.root.sort((a, b) => sortNumeric(a, b, currentSort, field));
+                processedRows.filtered = processedRows.filtered.sort((a, b) => sortNumeric(a, b, currentSort, field));
             } else {
-                processedRows.root =  processedRows.root.sort((a, b) => compareStr(a, b, currentSort, field));
+                processedRows.filtered = processedRows.filtered.sort((a, b) => compareStr(a, b, currentSort, field));
             }
         }
         updatePaginatedRows();
     }
+
     function compareStr(a, b, type, field) {
         if (type === 'asc') {
             return ('' + a[field]).localeCompare(b[field]);
@@ -64,6 +82,7 @@
             return ('' + b[field]).localeCompare(a[field]);
         }
     }
+
     function sortNumeric(a, b, type, field) {
         if (type === 'asc') {
             return a[field] - b[field];
@@ -71,34 +90,57 @@
             return b[field] - a[field];
         }
     }
+
     function onHeaderClick(columnIndex, column) {
         if (column.sortable) {
-            resetOtherSorts(columnIndex);
-            setSortIcon(columnIndex, column);
+        	setSortIcon(column)
+            resetSorts(columnIndex);
             sortByColumn(columnIndex, column);
         }
         columns = columns;
     }
-    function updatePaginatedRows(){
-    	if (!paginated) {
-            paginator.startIndex = 0;
-            paginator.endIndex = rows.length;
-    	}
-        processedRows.paginated = rows.slice(paginator.startIndex, paginator.endIndex);
+
+    function updatePaginatedRows() {
+    	if(paginated) {
+            processedRows.paginated = processedRows.filtered.slice(paginator.startIndex, paginator.endIndex);
+        } else {
+            processedRows.paginated = [...processedRows.filtered];
+        }
     }
+
     function paginatorChange(event) {
-    	const data = event.detail;
-        paginator.startIndex =data.currentPageIndex * data.pageSize;
-        paginator.endIndex =  (data.currentPageIndex + 1) * data.pageSize;
-    	updatePaginatedRows();
+        const data = event.detail;
+        paginator.startIndex = data.currentPageIndex * data.pageSize;
+        paginator.endIndex = (data.currentPageIndex + 1) * data.pageSize;
+        updatePaginatedRows();
     }
+
+    function search(event) {
+        const searchKey = _.get(event, 'detail.searchKey');
+        if (searchKey === '' || !searchKey) {
+            processedRows.filtered = [...rows];
+        } else {
+            processedRows.filtered = fuse.search(searchKey)
+                                         .map(res => res.item);
+        }
+        updatePaginatedRows();
+        resetSorts();
+        resetPaginator();
+        columns = columns;
+    }
+
     initStates();
+
+
 </script>
 
 <style>
 
 </style>
 
+{#if searchable}
+    <Search  on:search={search}/>
+{/if}
 <div class="dt-container-layout dt-container-style">
     <table  ref="table"
             class="table table-striped table-hover">
@@ -140,6 +182,6 @@
 <Paginator
         on:paginatorChange={paginatorChange}
         {itemsPerPages}
-        totalItems={rows.length}/>
+        totalItems={processedRows.filtered.length}/>
 {/if}
 

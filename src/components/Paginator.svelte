@@ -1,19 +1,25 @@
+<script context="module">
+    export let resetPaginator;
+</script>
+
 <script>
     import _ from 'lodash';
     import { onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
 
-    export let itemsPerPages = [5];
-    export let pageSize = itemsPerPages[0];
-    export let totalItems = 0;
+    export let itemsPerPages;
+    export let totalItems;
 
     const dispatch = createEventDispatcher();
 
-    let pages = calculateTotalPages(totalItems, pageSize);
+    let currentPageIndex;
+    let pageSize;
+    let pages;
     let pagesArray = [];
-    let currentPageIndex = 0;
+
     let from;
     let to;
+
 
     function calculateTotalPages(totalItems, pageSize) {
         return Math.ceil(totalItems / pageSize);
@@ -31,7 +37,7 @@
         pagesArray = _.range(pages);
         currentPageIndexChange();
     }
-    function currentPageIndexChange(){
+    function currentPageIndexChange() {
         from = calculateFrom(currentPageIndex, pageSize);
         to = calculateTo(currentPageIndex, pageSize);
         dispatch('paginatorChange', {
@@ -54,10 +60,17 @@
             currentPageIndexChange();
         }
     }
+    resetPaginator = function(){
+        currentPageIndex = 0;
+        currentPageIndexChange();
+    }
 
-    onMount(async () => {
-        pageSizeChange();
+    onMount(() => {
+         pageSize = itemsPerPages[0];
+         pages = calculateTotalPages(totalItems, pageSize)
+         pageSizeChange();
     });
+
 </script>
 
 <style>
