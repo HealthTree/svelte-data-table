@@ -133,53 +133,95 @@
 </script>
 
 <style>
+    .dt-container-layout{
+        width: 100%;
+    }
+    .dt-table-container-style{
+        width: 100%;
+        margin: 15px 0px;
+        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    }
+    .dt-table-wrapper-style{
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+    }
+    .dt-table-header-th-style{
+        color: #757575;
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+    .dt-table-header-th-style:first-child{
+        padding-left: 24px;
+    }
+    .dt-table-header-th-style:last-child{
+        padding-right: 24px;
+    }
+
+    .dt-table-body-td-style{
+        border-top: 1px solid #E0E0E0;
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+    .dt-table-body-td-style:first-child{
+        padding-left: 24px;
+    }
+    .dt-table-body-td-style:last-child{
+        border-bottom: 1px solid #E0E0E0;
+        padding-right: 24px;
+    }
+
+
 
 </style>
 
-{#if searchable}
-    <Search  on:search={search}/>
-{/if}
-<div class="dt-container-layout dt-container-style">
-    <table  ref="table"
-            class="table table-striped table-hover">
-        <thead>
-            <tr>
-                {#each columns as column, x}
-                    <th on:click="{() => onHeaderClick(x, column)}">
-                        {column.label}
-                        {#if _.get(column, '_dTProperties.currentSort') === 'asc'}
-                             &ShortUpArrow;
-                        {/if}
-                        {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
-                             &ShortDownArrow;
-                        {/if}
-
-                    </th>
-                {/each}
-            </tr>
-        </thead>
-
-        <tbody>
-            {#each processedRows.paginated as row, y}
+<div class="dt-container-layout">
+    {#if searchable}
+        <Search  on:search={search}/>
+    {/if}
+    <div class="dt-table-container-style">
+        <table class="dt-table-wrapper-style">
+            <thead>
                 <tr>
                     {#each columns as column, x}
-                        <td>
-                            {#if column.component}
-                                <svelte:component this={column.component} {row} {column}/>
-                            {:else}
-                                {_.get(row, column.field, null)}
+                        <th class="dt-table-header-th-style"
+                                on:click="{() => onHeaderClick(x, column)}">
+                            {column.label}
+                            {#if _.get(column, '_dTProperties.currentSort') === 'asc'}
+                            &ShortUpArrow;
                             {/if}
-                        </td>
+                            {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
+                            &ShortDownArrow;
+                            {/if}
+
+                        </th>
                     {/each}
                 </tr>
-            {/each}
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                {#each processedRows.paginated as row, y}
+                    <tr>
+                        {#each columns as column, x}
+                            <td class="dt-table-body-td-style">
+                                {#if column.component}
+                                    <svelte:component this={column.component} {row} {column}/>
+                                {:else}
+                                    {_.get(row, column.field, null)}
+                                {/if}
+                            </td>
+                        {/each}
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    </div>
+    {#if paginated}
+        <Paginator
+                on:paginatorChange={paginatorChange}
+                {itemsPerPages}
+                totalItems={processedRows.filtered.length}/>
+    {/if}
+
 </div>
-{#if paginated}
-<Paginator
-        on:paginatorChange={paginatorChange}
-        {itemsPerPages}
-        totalItems={processedRows.filtered.length}/>
-{/if}
 
