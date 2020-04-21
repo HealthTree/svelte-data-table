@@ -34,7 +34,7 @@
     }
     .dt-search-input-style{
         background: none;
-        color: lightgray;
+        color: darkgrey;
         font-size: 18px;
         padding: 10px 10px 10px 5px;
         display: block;
