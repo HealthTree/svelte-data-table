@@ -26,21 +26,32 @@
     let fuse;
 
 
+    $: {
+        if(processedRows.filtered){
+            updatePaginatedRows(paginator);
+        }
+    }
+
+    $: {
+        if (rows) {
+            initStates();
+    	}
+    }
+
     function initStates() {
         initColumnProperties(columns);
         initPaginator();
-        initPreprocessRows();
+        initPreprocessRows(rows);
         fuse = new Fuse(rows, fuseConfig || {});
+        updatePaginatedRows(paginator);
     }
     function initPaginator() {
         paginator.startIndex = 0;
         paginator.endIndex = (paginated) ? itemsPerPages[0] -1 : rows.length- 1;
     }
-    function initPreprocessRows() {
+    function initPreprocessRows(rows) {
         processedRows.filtered = (searchable) ? [...rows] : rows;
-        updatePaginatedRows();
     }
-
     function initColumnProperties(columns) {
         columns.forEach(col => {
             col['_dTProperties'] = {};
@@ -54,12 +65,10 @@
             }
         });
     }
-
     function setSortIcon(column) {
         if (!column.sortable) return;
         column._dTProperties.currentSort = column._dTProperties.currentSort === 'asc' ? 'desc' : 'asc';
     }
-
     function sortByColumn(columnIndex, column) {
         const currentSort = column._dTProperties.currentSort;
         const field = column.field;
@@ -72,9 +81,7 @@
                 processedRows.filtered = processedRows.filtered.sort((a, b) => compareStr(a, b, currentSort, field));
             }
         }
-        updatePaginatedRows();
     }
-
     function compareStr(a, b, type, field) {
         if (type === 'asc') {
             return ('' + a[field]).localeCompare(b[field]);
@@ -82,7 +89,6 @@
             return ('' + b[field]).localeCompare(a[field]);
         }
     }
-
     function sortNumeric(a, b, type, field) {
         if (type === 'asc') {
             return a[field] - b[field];
@@ -90,7 +96,6 @@
             return b[field] - a[field];
         }
     }
-
     function onHeaderClick(columnIndex, column) {
         if (column.sortable) {
         	setSortIcon(column)
@@ -99,22 +104,18 @@
         }
         columns = columns;
     }
-
-    function updatePaginatedRows() {
-    	if(paginated) {
-            processedRows.paginated = processedRows.filtered.slice(paginator.startIndex, paginator.endIndex);
-        } else {
-            processedRows.paginated = [...processedRows.filtered];
-        }
-    }
-
     function paginatorChange(event) {
         const data = event.detail;
         paginator.startIndex = data.currentPageIndex * data.pageSize;
         paginator.endIndex = (data.currentPageIndex + 1) * data.pageSize;
-        updatePaginatedRows();
     }
-
+    function updatePaginatedRows(paginator){
+        if(paginated) {
+            processedRows.paginated = processedRows.filtered.slice(paginator.startIndex, paginator.endIndex);
+        } else {
+            processedRows.paginated = [...processedRows.filtered];
+        }
+    };
     function search(event) {
         const searchKey = _.get(event, 'detail.searchKey');
         if (searchKey === '' || !searchKey) {
@@ -123,14 +124,11 @@
             processedRows.filtered = fuse.search(searchKey)
                                          .map(res => res.item);
         }
-        updatePaginatedRows();
-        resetSorts();
+
         resetPaginator();
+        resetSorts();
         columns = columns;
     }
-
-    initStates();
-
 
 </script>
 

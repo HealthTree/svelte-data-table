@@ -20,7 +20,23 @@
     let from;
     let to;
 
+    $: {
+        if(totalItems != null){
+            initPaginator();
+        }
+    }
 
+    $: {
+        if (pageSize || currentPageIndex != null) {
+            currentPageIndexChange();
+        }
+    }
+
+    function initPaginator(){
+        pageSize = itemsPerPages[0];
+        pages = calculateTotalPages(totalItems, pageSize)
+        resetPaginator();
+    }
     function calculateTotalPages(totalItems, pageSize) {
         return Math.ceil(totalItems / pageSize);
     }
@@ -31,13 +47,22 @@
         const to = (currentPageIndex + 1) * pageSize;
         return to <= totalItems ? to : totalItems
     }
-    function pageSizeChange() {
+    resetPaginator = function() {
         currentPageIndex = 0;
         pages = calculateTotalPages(totalItems, pageSize);
         pagesArray = _.range(pages);
-        currentPageIndexChange();
     }
-    function currentPageIndexChange() {
+    function handleLess(){
+    	if(currentPageIndex !== 0){
+            currentPageIndex = currentPageIndex - 1;
+        }
+    }
+    function handleMore(){
+        if(currentPageIndex < pages - 1) {
+            currentPageIndex = currentPageIndex + 1;
+        }
+    }
+    function currentPageIndexChange(){
         from = calculateFrom(currentPageIndex, pageSize);
         to = calculateTo(currentPageIndex, pageSize);
         dispatch('paginatorChange', {
@@ -47,29 +72,6 @@
             to
         });
     }
-
-    function handleLess(){
-    	if(currentPageIndex !== 0){
-            currentPageIndex = currentPageIndex - 1;
-            currentPageIndexChange();
-        }
-    }
-    function handleMore(){
-        if(currentPageIndex < pages - 1) {
-            currentPageIndex = currentPageIndex + 1;
-            currentPageIndexChange();
-        }
-    }
-    resetPaginator = function(){
-        currentPageIndex = 0;
-        currentPageIndexChange();
-    }
-
-    onMount(() => {
-         pageSize = itemsPerPages[0];
-         pages = calculateTotalPages(totalItems, pageSize)
-         pageSizeChange();
-    });
 
 </script>
 
@@ -97,7 +99,7 @@
 <div class="dt-paginator-layout">
     <div class="dt-paginator-items-per-page-layout">
         Items per page:
-        <select bind:value={pageSize} on:change="{() => pageSizeChange()}">
+        <select bind:value={pageSize} on:change="{() => resetPaginator()}">
             {#each itemsPerPages as itemPerPage}
                 <option value={itemPerPage}>
                     {itemPerPage}
@@ -110,7 +112,7 @@
         <div class="dt-paginator-arrows-layout" on:click="{() => handleLess()}">
             &#x2C2
         </div>
-        <select bind:value={currentPageIndex} on:change="{() => currentPageIndexChange()}" >
+        <select bind:value={currentPageIndex} >
             {#each pagesArray as page}
                 <option value={page}>
                     {page + 1}
