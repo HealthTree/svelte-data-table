@@ -6,9 +6,12 @@
     export let columns = [];
     export let rows = [];
 
-    let paginatorStartIndex;
-    let paginatorEndIndex;
-    let paginatedRows = [];
+    export let paginated = true;
+    export let itemsPerPages = [5,10,15];
+
+    let paginatorStartIndex  = 0;
+    let paginatorEndIndex = rows.length;
+    let paginatedRows = [...rows];
 
 
     function initColumnProperties(columns) {
@@ -64,6 +67,10 @@
         columns = columns;
     }
     function updatePaginatedRows(){
+    	if (!paginated) {
+            paginatorStartIndex = 0;
+            paginatorEndIndex = rows.length;
+    	}
         paginatedRows = rows.slice(paginatorStartIndex, paginatorEndIndex);
     }
     function paginatorChange(event) {
@@ -81,12 +88,6 @@
 </style>
 
 <div class="dt-container-layout dt-container-style">
-    {#if search}
-        <div>
-            SEARCH
-        </div>
-    {/if}
-
     <table  ref="table"
             class="table table-striped table-hover">
         <thead>
@@ -123,6 +124,10 @@
         </tbody>
     </table>
 </div>
+{#if paginated}
 <Paginator
         on:paginatorChange={paginatorChange}
+        {itemsPerPages}
         totalItems={rows.length}/>
+{/if}
+

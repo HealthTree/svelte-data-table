@@ -48,6 +48,7 @@
 </style>
 
 <DataTable
+        itemsPerPage = {[5,10,15]}
         {columns}
         {rows}/>
 

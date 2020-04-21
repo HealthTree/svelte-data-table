@@ -3,7 +3,7 @@
     import { onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
 
-    export let itemsPerPages = [5,10,15];
+    export let itemsPerPages = [5];
     export let pageSize = itemsPerPages[0];
     export let totalItems = 0;
 
@@ -58,7 +58,6 @@
     onMount(async () => {
         pageSizeChange();
     });
-
 </script>
 
 <style>
