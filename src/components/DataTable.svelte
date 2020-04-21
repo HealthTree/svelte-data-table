@@ -5,13 +5,28 @@
     export let columns = [];
     export let rows = [];
 
+
     export let paginated = true;
     export let itemsPerPages = [5,10,15];
 
-    let paginatorStartIndex  = 0;
-    let paginatorEndIndex = rows.length;
-    let paginatedRows = [...rows];
+    let paginator = {
+        startIndex: 0,
+        paginatorEndIndex: null,
+        itemsPerPages
+    }
+    let processedRows = {
+        root: [],
+        filtered: [],
+        paginated: []
+    };
 
+
+    function initStates() {
+        paginator.startIndex = 0;
+        paginator.endIndex = (paginated) ? null: rows.root.length;
+
+        processedRows.root = rows;
+    }
 
     function initColumnProperties(columns) {
         columns.forEach(col => {
@@ -33,12 +48,12 @@
         const currentSort = column._dTProperties.currentSort;
         const field = column.field;
         if (column.sortFnc) {
-            rows = rows.sort((a, b) => column.sortFnc(a, b, currentSort));
+            processedRows.root =  processedRows.root.sort((a, b) => column.sortFnc(a, b, currentSort));
         } else {
             if (column.numeric) {
-                rows = rows.sort((a, b) => sortNumeric(a, b, currentSort, field));
+                processedRows.root =  processedRows.root.sort((a, b) => sortNumeric(a, b, currentSort, field));
             } else {
-                rows = rows.sort((a, b) => compareStr(a, b, currentSort, field));
+                processedRows.root =  processedRows.root.sort((a, b) => compareStr(a, b, currentSort, field));
             }
         }
         updatePaginatedRows();
@@ -67,15 +82,15 @@
     }
     function updatePaginatedRows(){
     	if (!paginated) {
-            paginatorStartIndex = 0;
-            paginatorEndIndex = rows.length;
+            paginator.startIndex = 0;
+            paginator.endIndex = rows.length;
     	}
-        paginatedRows = rows.slice(paginatorStartIndex, paginatorEndIndex);
+        rows.paginated = rows.slice(paginator.startIndex, paginator.endIndex);
     }
     function paginatorChange(event) {
     	const data = event.detail;
-    	paginatorStartIndex =data.currentPageIndex * data.pageSize;
-    	paginatorEndIndex =  (data.currentPageIndex + 1) * data.pageSize;
+        paginator.startIndex =data.currentPageIndex * data.pageSize;
+        paginator.endIndex =  (data.currentPageIndex + 1) * data.pageSize;
     	updatePaginatedRows();
     }
 
@@ -107,7 +122,7 @@
         </thead>
 
         <tbody>
-            {#each paginatedRows as row, y}
+            {#each processedRows.paginated as row, y}
                 <tr>
                     {#each columns as column, x}
                         <td>
