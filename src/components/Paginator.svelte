@@ -78,25 +78,34 @@
 <style>
     .dt-paginator-layout{
         display: flex;
+        justify-content: end;
         align-items: center;
     }
+    .dt-paginator-style{
+        color: #8E8E8E;
+        font-size: 18px;
+    }
     .dt-paginator-items-per-page-layout{
-        padding-right: 8px;
+        padding-right: 40px;
+    }
+    .dt-paginator-status-layout {
+        padding-right: 40px;
     }
     .dt-paginator-current-page-layout {
         display: flex;
         align-items: center;
-        padding-right: 8px;
+
     }
     .dt-paginator-arrows-layout{
         padding-top: 10px;
         font-size: 30px;
         position: relative;
         margin-top: 8px;
+        cursor: pointer;
     }
 </style>
 
-<div class="dt-paginator-layout">
+<div class="dt-paginator-layout dt-paginator-style">
     <div class="dt-paginator-items-per-page-layout">
         Items per page:
         <select bind:value={pageSize} on:change="{() => resetPaginator()}">
@@ -107,8 +116,10 @@
             {/each}
         </select>
     </div>
+    <div class="dt-paginator-status-layout">
+        {from} - {to} of {totalItems}
+    </div>
     <div class="dt-paginator-current-page-layout">
-        Page:
         <div class="dt-paginator-arrows-layout" on:click="{() => handleLess()}">
             &#x2C2
         </div>
@@ -122,8 +133,5 @@
         <div class="dt-paginator-arrows-layout" on:click="{() => handleMore()}">
             &#x2C3
         </div>
-    </div>
-    <div class="dt-paginator-status-layout">
-        {from} - {to} of {totalItems}
     </div>
 </div>
