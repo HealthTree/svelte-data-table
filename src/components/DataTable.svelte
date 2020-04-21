@@ -22,12 +22,11 @@
 
 
     function initStates() {
-        paginator.startIndex = 0;
-        paginator.endIndex = (paginated) ? null: rows.root.length;
-
         processedRows.root = rows;
+        paginator.startIndex = 0;
+        paginator.endIndex = (paginated) ? null: processedRows.root.length;
+        initColumnProperties(columns);
     }
-
     function initColumnProperties(columns) {
         columns.forEach(col => {
             col['_dTProperties'] = {};
@@ -85,7 +84,7 @@
             paginator.startIndex = 0;
             paginator.endIndex = rows.length;
     	}
-        rows.paginated = rows.slice(paginator.startIndex, paginator.endIndex);
+        processedRows.paginated = rows.slice(paginator.startIndex, paginator.endIndex);
     }
     function paginatorChange(event) {
     	const data = event.detail;
@@ -93,8 +92,7 @@
         paginator.endIndex =  (data.currentPageIndex + 1) * data.pageSize;
     	updatePaginatedRows();
     }
-
-    initColumnProperties(columns);
+    initStates();
 </script>
 
 <style>
