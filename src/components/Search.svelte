@@ -21,7 +21,7 @@
     	dtInput.addEventListener('keyup', _.debounce(callSearch , 500))
     });
     onDestroy(() => {
-        dtInput.removeEventListener('keyup', ()=>{});
+    	if(dtInput) dtInput.removeEventListener('keyup', ()=>{});
     });
 
 
