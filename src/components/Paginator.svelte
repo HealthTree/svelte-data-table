@@ -85,18 +85,18 @@
         color: #8E8E8E;
         font-size: 18px;
     }
-    .dt-paginator-items-per-page-layout{
+    .dt-paginator-items-per-page-style{
         padding-right: 40px;
     }
-    .dt-paginator-status-layout {
+    .dt-paginator-status-style {
         padding-right: 40px;
     }
-    .dt-paginator-current-page-layout {
+    .dt-paginator-current-page-style {
         display: flex;
         align-items: center;
 
     }
-    .dt-paginator-arrows-layout{
+    .dt-paginator-arrows-style{
         padding-top: 10px;
         font-size: 30px;
         position: relative;
@@ -106,7 +106,7 @@
 </style>
 
 <div class="dt-paginator-layout dt-paginator-style">
-    <div class="dt-paginator-items-per-page-layout">
+    <div class="dt-paginator-items-per-page-style">
         Items per page:
         <select bind:value={pageSize} on:change="{() => resetPaginator()}">
             {#each itemsPerPages as itemPerPage}
@@ -116,11 +116,11 @@
             {/each}
         </select>
     </div>
-    <div class="dt-paginator-status-layout">
+    <div class="dt-paginator-status-style">
         {from} - {to} of {totalItems}
     </div>
-    <div class="dt-paginator-current-page-layout">
-        <div class="dt-paginator-arrows-layout" on:click="{() => handleLess()}">
+    <div class="dt-paginator-current-page-style">
+        <div class="dt-paginator-arrows-style" on:click="{() => handleLess()}">
             &#x2C2
         </div>
         <select bind:value={currentPageIndex} >
@@ -130,7 +130,7 @@
                 </option>
             {/each}
         </select>
-        <div class="dt-paginator-arrows-layout" on:click="{() => handleMore()}">
+        <div class="dt-paginator-arrows-style" on:click="{() => handleMore()}">
             &#x2C3
         </div>
     </div>

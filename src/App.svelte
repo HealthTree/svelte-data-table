@@ -4,13 +4,15 @@
 
   const columns = [
     {
+      label: 'Id',
+      field: 'id',
+      numeric: true,
+      sortable: true
+    },
+    {
       label: 'Name',
       field: 'name',
       sortable: true,
-    },
-    {
-      label: 'LastName',
-      field: 'lastName',
     },
     {
       label: 'fav provider',
@@ -25,29 +27,24 @@
     },
   ];
   let rows = [
-    { name: 'Diego', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'b', lastName: '2', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'c', lastName: '3', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'd', lastName: '4', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'e', lastName: '5', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'f', lastName: '6', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'g', lastName: '7', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'h', lastName: '8', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'i', lastName: '9', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'j', lastName: '10', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'k', lastName: '11', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'l', lastName: '12', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
-    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Diego', id: 0, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'a', id: 1, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'b', id: 2, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'c', id: 3, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'd', id: 4, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'e', id: 5, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'f', id: 6, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'g', id: 7, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'h', id: 8, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'i', id: 9, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'j', id: 10, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'k', id: 11, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'l', id: 12, provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'Juan Pablo', id: 13, provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', id: 14, provider: 'gitlab.com', socialNetwork: 'google+.com' },
   ];
   const fuseConfig = {
-    keys: ['name']
+    keys: ['id', 'name', 'provider', 'socialNetwork']
   }
   // setTimeout(()=> {
   //  rows = [

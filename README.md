@@ -28,5 +28,29 @@ interface Column {
     component?: SvelteComponent // must export row and column vars     
     sortable?: boolean,
     numeric?: boolean,
-    sortFnc?: (a,b, currentSort), // currentSort can be asc|desc|null
+    sortFnc?: function, // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
 }
+```
+
+## CustomStyle
+
+Each element affected by css is divided by 2 clases: Layout and style. You can easily overwrite this css clases to
+make changes in style. We recomend only changing the styles ones which are:
+
+
+|Component|Class|
+| ------ |-------|
+|Search|dt-search-container-style|
+|Search|dt-search-input-style|
+|Table|dt-table-container-style|
+|Table|dt-table-wrapper-style|
+|Table|dt-table-header-th-style|
+|Table|dt-table-body-td-style|
+|Paginator|dt-paginator-style|
+|Paginator|dt-paginator-items-per-page-style|
+|Paginator|dt-paginator-status-style|
+|Paginator|dt-paginator-current-page-style|
+|Paginator|dt-paginator-arrows-style|
+
+
+
