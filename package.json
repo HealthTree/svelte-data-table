@@ -67,5 +67,5 @@
 		"prepublishOnly": "npm run build",
 		"start": "sirv public",
 		"test": "start-server-and-test dev http://localhost:5000 cy:run"
-	},
+	}
 }
