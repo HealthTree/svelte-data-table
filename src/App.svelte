@@ -57,13 +57,3 @@
         itemsPerPages = {[5,10]}
         {columns}
         {rows}/>
-<!--
-_column_
-label: string
-field: string
-component: Svelte component //optional
-sortable: bool //optional
-numeric: boolean // optional
-sortFnc(a,b, currentSort) //optional
--->
-
