@@ -132,6 +132,9 @@
 </script>
 
 <style>
+    .clickable {
+        cursor: pointer;
+    }
     .dt-container-layout{
         width: 100%;
     }
@@ -156,7 +159,6 @@
     .dt-table-header-th-style:last-child{
         padding-right: 24px;
     }
-
     .dt-table-body-td-style{
         border-top: 1px solid #E0E0E0;
         padding-top: 24px;
@@ -169,9 +171,6 @@
         border-bottom: 1px solid #E0E0E0;
         padding-right: 24px;
     }
-
-
-
 </style>
 
 <div class="dt-container-layout">
@@ -183,7 +182,8 @@
             <thead>
                 <tr>
                     {#each columns as column, x}
-                        <th class="dt-table-header-th-style"
+                        <th class="dt-table-header-th-style
+                                {column.sortable ? 'clickable': ''}"
                                 on:click="{() => onHeaderClick(x, column)}">
                             {column.label}
                             {#if _.get(column, '_dTProperties.currentSort') === 'asc'}
