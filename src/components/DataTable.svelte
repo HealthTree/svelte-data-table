@@ -47,7 +47,7 @@
     }
     function initPaginator() {
         paginator.startIndex = 0;
-        paginator.endIndex = (paginated) ? itemsPerPages[0] -1 : rows.length- 1;
+        paginator.endIndex = (paginated) ? itemsPerPages[0]: rows.length;
     }
     function initPreprocessRows(rows) {
         processedRows.filtered = (searchable) ? [...rows] : rows;
