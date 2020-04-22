@@ -124,8 +124,7 @@
             processedRows.filtered = fuse.search(searchKey)
                                          .map(res => res.item);
         }
-
-        resetPaginator();
+        if (paginated) resetPaginator();
         resetSorts();
         columns = columns;
     }
