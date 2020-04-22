@@ -1,6 +1,5 @@
 <script>
   import { DataTable } from './components/components.module.js';
-  import { Search } from './components/components.module';
   import CustomCol1 from './CustomCol1.svelte';
 
   const columns = [
@@ -25,7 +24,7 @@
       component: CustomCol1,
     },
   ];
-  const rows = [
+  let rows = [
     { name: 'Diego', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
     { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
     { name: 'b', lastName: '2', provider: 'github.com', socialNetwork: 'facebook.com' },
@@ -40,10 +39,22 @@
     { name: 'k', lastName: '11', provider: 'github.com', socialNetwork: 'facebook.com' },
     { name: 'l', lastName: '12', provider: 'github.com', socialNetwork: 'facebook.com' },
     { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
   ];
   const fuseConfig = {
     keys: ['name']
   }
+  // setTimeout(()=> {
+  //  rows = [
+  //    { name: 'AA', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
+  //    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
+  //  ]
+  // }, 1500)
 </script>
 
 <style>
