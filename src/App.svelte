@@ -6,7 +6,7 @@
     {
       label: 'Name',
       field: 'name',
-      sortable: true
+      sortable: true,
     },
     {
       label: 'LastName',
@@ -21,13 +21,40 @@
     {
       label: 'fav social network',
       field: 'socialNetwork',
-      component: CustomCol1
-    }
+      component: CustomCol1,
+    },
   ];
-  const rows = [
-    { name: 'Diego', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com'},
+  let rows = [
+    { name: 'Diego', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'b', lastName: '2', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'c', lastName: '3', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'd', lastName: '4', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'e', lastName: '5', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'f', lastName: '6', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'g', lastName: '7', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'h', lastName: '8', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'i', lastName: '9', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'j', lastName: '10', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'k', lastName: '11', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'l', lastName: '12', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
+    { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
     { name: 'Juan Pablo', lastName: 'Capdevilla', provider: 'gitlab.com', socialNetwork: 'google+.com' },
   ];
+  const fuseConfig = {
+    keys: ['name']
+  }
+  // setTimeout(()=> {
+  //  rows = [
+  //    { name: 'AA', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
+  //    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
+  //  ]
+  // }, 1500)
 </script>
 
 <style>
@@ -35,17 +62,9 @@
 </style>
 
 <DataTable
+        paginated = {true}
+        searchable={true}
+        {fuseConfig}
+        itemsPerPages = {[5,10]}
         {columns}
-        {rows}
-/>
-
-
-<!--
-_column_
-label: string
-field: string
-component: Svelte component //optional
-sortable: bool //optional
-numeric: boolean // optional
-sortFnc(a,b, currentSort) //optional
--->
+        {rows}/>
