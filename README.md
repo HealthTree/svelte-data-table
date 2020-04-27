@@ -14,9 +14,15 @@ This is a reactive svelte-datatable. Feats:
 | ------ | ------ | ------ | ----- |
 |columns| Column[] | true | --
 |rows| object[] | true | --
+|fuseConfig| object | false | --
 |paginated|boolean|false|true|
 |searchable|boolean|false|true|
 |itemsPerPages|number[]|false| [5,10,15]
+
+If searchable == true, by default all columns will be searchable. If you wish to exclude a column from search, specify
+searchable = false in the column definition.
+
+Custom fuse parameters may also be provided through the fuseConfig prop
 
 
 ## Interfaces
@@ -27,6 +33,7 @@ interface Column {
     field: string, // property on rows to display;accessed by _.get
     component?: SvelteComponent // must export row and column vars     
     sortable?: boolean,
+    searchable?: boolean, // true by default
     numeric?: boolean,
     sortFnc?: function, // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
 }

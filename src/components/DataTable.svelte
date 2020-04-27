@@ -11,8 +11,8 @@
     export let itemsPerPages = [5,10,15];
 
     export let searchable = false;
-    export let fuseConfig = {
-    }
+    export let fuseConfig;
+    export let onRowClick;
 
     let paginator = {
         startIndex: 0,
@@ -42,7 +42,20 @@
         initColumnProperties(columns);
         initPaginator();
         initPreprocessRows(rows);
-        fuse = new Fuse(rows, fuseConfig || {});
+        if(searchable) {
+        	if(fuseConfig) {
+        		console.log('prop fuseConfig', fuseConfig)
+        		fuse = new Fuse(rows, fuseConfig);
+            } else {
+        		let nonSearchableFields = columns
+                        .filter(column => column.searchable === false)
+                        .map(column => column.field);
+        		let searchableFields = columns
+                        .map(column => column.field)
+                        .filter(field => !nonSearchableFields.includes(field));
+                fuse = new Fuse(rows, {keys: searchableFields});
+            }
+        }
         updatePaginatedRows(paginator);
     }
     function initPaginator() {
@@ -200,13 +213,13 @@
 
             <tbody>
                 {#each processedRows.paginated as row, y}
-                    <tr>
+                    <tr on:click={() => onRowClick && onRowClick(row)}>
                         {#each columns as column, x}
-                            <td class="dt-table-body-td-style">
+                            <td class="dt-table-body-td-style" on:click={() => column.onClick && column.onClick(row, column)}>
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column}/>
                                 {:else}
-                                    {_.get(row, column.field, null)}
+                                    {@html _.get(row, column.field, null)}
                                 {/if}
                             </td>
                         {/each}
