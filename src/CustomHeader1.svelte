@@ -1,5 +1,4 @@
 <script>
-    export let row;
     export let column;
 </script>
 
@@ -9,4 +8,4 @@
     }
 </style>
 
-<div class="info">{row[column.field]}</div>
+<div class="info">Test</div>
