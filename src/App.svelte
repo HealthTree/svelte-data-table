@@ -1,6 +1,7 @@
 <script>
   import { DataTable } from './components/components.module.js';
   import CustomCol1 from './CustomCol1.svelte';
+  import CustomHeader1 from './CustomHeader1.svelte';
 
   const columns = [
     {
@@ -24,6 +25,12 @@
       label: 'fav social network',
       field: 'socialNetwork',
       component: CustomCol1,
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
     },
   ];
   let rows = [

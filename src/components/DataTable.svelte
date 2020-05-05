@@ -184,15 +184,22 @@
                     {#each columns as column, x}
                         <th class="dt-table-header-th-style
                                 {column.sortable ? 'clickable': ''}"
-                                on:click="{() => onHeaderClick(x, column)}">
-                            {column.label}
+                            on:click="{() => onHeaderClick(x, column)}">
+
+                            {#if column.headerComponent}
+                            <div style="display: inline-block">
+                                <svelte:component this={column.component} {column}/>
+                            </div>
+                            {:else}
+                                {column.label}
+                            {/if}
+
                             {#if _.get(column, '_dTProperties.currentSort') === 'asc'}
                             &ShortUpArrow;
                             {/if}
                             {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
                             &ShortDownArrow;
                             {/if}
-
                         </th>
                     {/each}
                 </tr>
