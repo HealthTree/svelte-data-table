@@ -188,7 +188,7 @@
 
                             {#if column.headerComponent}
                             <div style="display: inline-block">
-                                <svelte:component this={column.component} {column}/>
+                                <svelte:component this={column.headerComponent} {column}/>
                             </div>
                             {:else}
                                 {column.label}
