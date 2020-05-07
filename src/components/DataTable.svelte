@@ -36,9 +36,8 @@
             updatePaginatedRows(paginator);
         }
     }
-
     $: {
-        if (rows) {
+        if (rows || columns) {
             initStates();
     	}
     }
@@ -70,7 +69,6 @@
         } else {
             hasStickyColumn = true;
             stickyColumnWidth = (stickyColumn.minWidth) ? stickyColumn.minWidth : defaultMinWidth;
-            console.log(hasStickyColumn, stickyColumnWidth);
         }
     }
     function setThTdStickiness(column){
@@ -86,8 +84,7 @@
         }
         return '';
     }
-    function setScrollerStickyMargin(){
-    	console.log('this', stickyColumnWidth, hasStickyColumn);
+    function setScrollerStickyMargin(hasStickyColumn, stickyColumnWidth){
         if(hasStickyColumn){
             return `
             margin-left: ${stickyColumnWidth}px;
@@ -96,7 +93,6 @@
         return ''
     }
     function setMinWidth(column){
-    	console.log('setMW')
     	return 'min-width:'  + (column.minWidth || defaultMinWidth) + 'px;';
     }
 
@@ -236,7 +232,7 @@
         <Search  on:search={search}/>
     {/if}
     <div class="dt-table-container-style dt-table-container-layout">
-        <div class="dt-table-container-scroller-layout" style={setScrollerStickyMargin()}>
+        <div class="dt-table-container-scroller-layout" style={setScrollerStickyMargin(hasStickyColumn, stickyColumnWidth)}>
             <table class="dt-table-wrapper-style">
                 <thead>
                 <tr>
