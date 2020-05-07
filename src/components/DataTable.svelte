@@ -181,14 +181,14 @@
         <table class="dt-table-wrapper-style">
             <thead>
                 <tr>
-                    {#each columns as column, x}
+                    {#each columns as column, columnIndex}
                         <th class="dt-table-header-th-style
                                 {column.sortable ? 'clickable': ''}"
-                            on:click="{() => onHeaderClick(x, column)}">
+                            on:click="{() => onHeaderClick(columnIndex, column)}">
 
                             {#if column.headerComponent}
                             <div style="display: inline-block">
-                                <svelte:component this={column.headerComponent} {column}/>
+                                <svelte:component this={column.headerComponent} {column} {columnIndex}/>
                             </div>
                             {:else}
                                 {column.label}
@@ -206,12 +206,12 @@
             </thead>
 
             <tbody>
-                {#each processedRows.paginated as row, y}
+                {#each processedRows.paginated as row, rowIndex}
                     <tr>
-                        {#each columns as column, x}
+                        {#each columns as column, columnIndex}
                             <td class="dt-table-body-td-style">
                                 {#if column.component}
-                                    <svelte:component this={column.component} {row} {column}/>
+                                    <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
                                 {:else}
                                     {_.get(row, column.field, null)}
                                 {/if}

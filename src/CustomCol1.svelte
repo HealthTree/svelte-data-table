@@ -1,6 +1,8 @@
 <script>
     export let row;
     export let column;
+    export let rowIndex;
+    export let columnIndex;
 </script>
 
 <style>
@@ -9,4 +11,4 @@
     }
 </style>
 
-<div class="info">{row[column.field]}</div>
+<div class="info">{row[column.field]} rowIndex: {rowIndex} colIndex:{columnIndex}</div>
