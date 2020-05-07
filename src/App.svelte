@@ -59,6 +59,13 @@
   //    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
   //  ]
   // }, 1500)
+  function headerClickHandler(event){
+    console.log(event)
+  }
+
+  function headerCustomHandler(obj){
+    console.log(obj);
+  }
 </script>
 
 <style>
@@ -66,6 +73,8 @@
 </style>
 
 <DataTable
+        on:headerClick={headerClickHandler}
+        on:headerCustomHandler={headerCustomHandler}
         paginated = {true}
         searchable={true}
         {fuseConfig}
