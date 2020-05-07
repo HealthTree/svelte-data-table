@@ -3,6 +3,9 @@
     import Paginator, {resetPaginator} from './Paginator.svelte';
     import Search from './Search.svelte';
     import Fuse  from 'fuse.js';
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     export let columns = [];
     export let rows = [];
@@ -97,6 +100,10 @@
         }
     }
     function onHeaderClick(columnIndex, column) {
+        dispatch('headerClick', {
+            columnIndex,
+            column
+        });
         if (column.sortable) {
         	setSortIcon(column)
             resetSorts(columnIndex);
@@ -128,7 +135,6 @@
         resetSorts();
         columns = columns;
     }
-
 </script>
 
 <style>
@@ -188,7 +194,10 @@
 
                             {#if column.headerComponent}
                             <div style="display: inline-block">
-                                <svelte:component this={column.headerComponent} {column} {columnIndex}/>
+                                <svelte:component
+                                        this={column.headerComponent} {column} {columnIndex}
+                                        on:headerCustomHandler
+                                />
                             </div>
                             {:else}
                                 {column.label}
