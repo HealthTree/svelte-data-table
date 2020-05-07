@@ -19,6 +19,6 @@
 </style>
 
 <div class="info">
-    <p on:click={onClick1}>Click1</p>
-    <p on:click={onClick2}>Click2</p>
+    <label on:click={onClick1}>Click1</label>
+    <label on:click={onClick2}>Click2</label>
 </div>
