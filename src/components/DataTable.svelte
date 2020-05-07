@@ -4,6 +4,7 @@
     import Search from './Search.svelte';
     import Fuse  from 'fuse.js';
     import { createEventDispatcher } from 'svelte';
+    const defaultMinWidth = 50
 
     const dispatch = createEventDispatcher();
 
@@ -27,7 +28,8 @@
         paginated: [],
     };
     let fuse;
-
+    let stickyColumnWidth;
+    let hasStickyColumn;
 
     $: {
         if(processedRows.filtered){
@@ -47,6 +49,7 @@
         initPreprocessRows(rows);
         fuse = new Fuse(rows, fuseConfig || {});
         updatePaginatedRows(paginator);
+        initStickyStates(columns);
     }
     function initPaginator() {
         paginator.startIndex = 0;
@@ -59,6 +62,42 @@
         columns.forEach(col => {
             col['_dTProperties'] = {};
         });
+    }
+    function initStickyStates(columns){
+        const stickyColumn = columns.find(c => c.sticky);
+        if(!stickyColumn) {
+            hasStickyColumn = false;
+        } else {
+            hasStickyColumn = true;
+            stickyColumnWidth = (stickyColumn.minWidth) ? stickyColumn.minWidth : defaultMinWidth;
+            console.log(hasStickyColumn, stickyColumnWidth);
+        }
+    }
+    function setThTdStickiness(column){
+        if(column.sticky){
+        	return  `
+        	    border-left: solid 1px #DDEFEF;
+                border-right: solid 1px #DDEFEF;
+                left: 0;
+                position: absolute;
+                top: auto;
+                width: ${stickyColumnWidth}px;
+            `;
+        }
+        return '';
+    }
+    function setScrollerStickyMargin(){
+    	console.log('this', stickyColumnWidth, hasStickyColumn);
+        if(hasStickyColumn){
+            return `
+            margin-left: ${stickyColumnWidth}px;
+            `
+        }
+        return ''
+    }
+    function setMinWidth(column){
+    	console.log('setMW')
+    	return 'min-width:'  + (column.minWidth || defaultMinWidth) + 'px;';
     }
 
     function resetSorts(excludeIndex) {
@@ -149,6 +188,15 @@
         margin: 15px 0px;
         box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
     }
+    .dt-table-container-layout{
+        position: relative;
+        overflow: hidden;
+    }
+    .dt-table-container-scroller-layout{
+        overflow-x: scroll;
+        overflow-y: visible;
+        width: 100%;
+    }
     .dt-table-wrapper-style{
         width: 100%;
         text-align: left;
@@ -158,6 +206,8 @@
         color: #757575;
         padding-top: 24px;
         padding-bottom: 24px;
+        padding-left: 24px;
+        box-sizing: border-box;
     }
     .dt-table-header-th-style:first-child{
         padding-left: 24px;
@@ -168,7 +218,9 @@
     .dt-table-body-td-style{
         border-top: 1px solid #E0E0E0;
         padding-top: 24px;
+        padding-left: 24px;
         padding-bottom: 24px;
+        box-sizing: border-box;
     }
     .dt-table-body-td-style:first-child{
         padding-left: 24px;
@@ -183,22 +235,25 @@
     {#if searchable}
         <Search  on:search={search}/>
     {/if}
-    <div class="dt-table-container-style">
-        <table class="dt-table-wrapper-style">
-            <thead>
+    <div class="dt-table-container-style dt-table-container-layout">
+        <div class="dt-table-container-scroller-layout" style={setScrollerStickyMargin()}>
+            <table class="dt-table-wrapper-style">
+                <thead>
                 <tr>
                     {#each columns as column, columnIndex}
                         <th class="dt-table-header-th-style
-                                {column.sortable ? 'clickable': ''}"
+                                    {column.sortable ? 'clickable': ''}"
+                            style= "{setMinWidth(column)}
+                                    {setThTdStickiness(column)}"
                             on:click="{() => onHeaderClick(columnIndex, column)}">
 
                             {#if column.headerComponent}
-                            <div style="display: inline-block">
-                                <svelte:component
-                                        this={column.headerComponent} {column} {columnIndex}
-                                        on:headerCustomHandler
-                                />
-                            </div>
+                                <div style="display: inline-block">
+                                    <svelte:component
+                                            this={column.headerComponent} {column} {columnIndex}
+                                            on:headerCustomHandler
+                                    />
+                                </div>
                             {:else}
                                 {column.label}
                             {/if}
@@ -212,13 +267,17 @@
                         </th>
                     {/each}
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody>
+                <tbody>
                 {#each processedRows.paginated as row, rowIndex}
                     <tr>
                         {#each columns as column, columnIndex}
-                            <td class="dt-table-body-td-style">
+                            <td class="dt-table-body-td-style
+                                  {column.sticky ? 'sticky': ''}"
+                                style= "{setMinWidth(column)}
+                                        {setThTdStickiness(column)}"
+                            >
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
                                 {:else}
@@ -228,8 +287,9 @@
                         {/each}
                     </tr>
                 {/each}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
     {#if paginated}
         <Paginator

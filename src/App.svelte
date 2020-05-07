@@ -2,24 +2,29 @@
   import { DataTable } from './components/components.module.js';
   import CustomCol1 from './CustomCol1.svelte';
   import CustomHeader1 from './CustomHeader1.svelte';
+  const minWidth = 300
 
   const columns = [
     {
       label: 'Id',
       field: 'id',
       numeric: true,
-      sortable: true
+      sortable: true,
+      sticky: true,
+      minWidth
     },
     {
       label: 'Name',
       field: 'name',
       sortable: true,
+      minWidth
     },
     {
       label: 'fav provider',
       field: 'provider',
       component: CustomCol1,
       sortable: true,
+      minWidth
     },
     {
       label: 'fav social network',
@@ -31,6 +36,49 @@
       component: CustomCol1,
       headerComponent: CustomHeader1,
       sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
+    },
+    {
+      field: 'socialNetwork',
+      component: CustomCol1,
+      headerComponent: CustomHeader1,
+      sortable: true,
+      minWidth
     },
   ];
   let rows = [

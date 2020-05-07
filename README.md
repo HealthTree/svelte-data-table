@@ -8,6 +8,7 @@ This is a reactive svelte-datatable. Feats:
   - FrontEnd included Searchbar
   - You can pass SvelteComponent to render on a column
   - You can pass SvelteComponent to render a header
+  - Sticky 1 column (can sticky just 1 col for now)
 ## Documentation
 
 |Param|type|Required|Default|
@@ -30,6 +31,7 @@ interface Column {
     headerComponent?: SvelteComponent // must export column and columnIndex  to have scopes     
     sortable?: boolean,
     numeric?: boolean,
+    sticky?: boolean,
     sortFnc?: 'function' // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
 }
 ```
