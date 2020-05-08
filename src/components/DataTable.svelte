@@ -37,7 +37,7 @@
         }
     }
     $: {
-        if (rows || columns) {
+        if (rows) {
             initStates();
     	}
     }
@@ -45,8 +45,8 @@
     function initStates() {
         initColumnProperties(columns);
         initPaginator();
-        initPreprocessRows(rows);
         fuse = new Fuse(rows, fuseConfig || {});
+        initPreprocessRows(rows);
         updatePaginatedRows(paginator);
         initStickyStates(columns);
     }
@@ -77,8 +77,8 @@
         	    border-left: solid 1px #DDEFEF;
                 border-right: solid 1px #DDEFEF;
                 left: 0;
-                position: absolute;
                 top: auto;
+                position: absolute;
                 width: ${stickyColumnWidth}px;
             `;
         }
@@ -191,7 +191,6 @@
     .dt-table-container-scroller-layout{
         overflow-x: scroll;
         overflow-y: visible;
-        width: 100%;
     }
     .dt-table-wrapper-style{
         width: 100%;
