@@ -15,8 +15,8 @@
     export let itemsPerPages = [5,10,15];
 
     export let searchable = false;
-    export let fuseConfig = {
-    }
+    export let fuseConfig = {};
+    export let onRowClick;
 
     let paginator = {
         startIndex: 0,
@@ -36,6 +36,7 @@
             updatePaginatedRows(paginator);
         }
     }
+
     $: {
         if (rows) {
             initStates();
@@ -45,11 +46,29 @@
     function initStates() {
         initColumnProperties(columns);
         initPaginator();
-        fuse = new Fuse(rows, fuseConfig || {});
         initPreprocessRows(rows);
+        initFuseSearch()
         updatePaginatedRows(paginator);
         initStickyStates(columns);
     }
+	function initFuseSearch(){
+		const finalConfig = _.cloneDeep(fuseConfig);
+		if(searchable) {
+			if(!finalConfig.keys) {
+				let nonSearchableFields = columns
+					.filter(column => {
+						console.log(!!column.searchable)
+						return !!column.searchable
+					})
+					.map(column => column.field);
+				let searchableFields = columns
+					.map(column => column.field)
+					.filter(field => !nonSearchableFields.includes(field));
+				finalConfig.keys = searchableFields;
+			}
+		}
+		fuse = new Fuse(rows, finalConfig);
+	}
     function initPaginator() {
         paginator.startIndex = 0;
         paginator.endIndex = (paginated) ? itemsPerPages[0]: rows.length;
@@ -80,6 +99,7 @@
                 top: auto;
                 position: absolute;
                 width: ${stickyColumnWidth}px;
+                height: 100%;
             `;
         }
         return '';
@@ -170,6 +190,7 @@
         resetSorts();
         columns = columns;
     }
+
 </script>
 
 <style>
@@ -262,21 +283,22 @@
                         </th>
                     {/each}
                 </tr>
-                </thead>
+            </thead>
 
                 <tbody>
                 {#each processedRows.paginated as row, rowIndex}
-                    <tr>
+                    <tr on:click={() => onRowClick && onRowClick(row)}>
                         {#each columns as column, columnIndex}
                             <td class="dt-table-body-td-style
                                   {column.sticky ? 'sticky': ''}"
                                 style= "{setMinWidth(column)}
                                         {setThTdStickiness(column)}"
+                                on:click={() => column.onClick && column.onClick(row, column)}
                             >
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
                                 {:else}
-                                    {_.get(row, column.field, null)}
+                                    {@html _.get(row, column.field, null)}
                                 {/if}
                             </td>
                         {/each}

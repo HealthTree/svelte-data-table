@@ -4,7 +4,7 @@
 	"svelte": "src/components/components.module.js",
 	"module": "dist/index.min.mjs",
 	"main": "dist/index.min.js",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"devDependencies": {
 		"@babel/core": "7.9.0",
 		"@babel/plugin-syntax-dynamic-import": "7.8.3",
