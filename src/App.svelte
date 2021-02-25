@@ -12,6 +12,10 @@
   const fuseConfig = {
     keys: ['id', 'name', 'provider', 'socialNetwork']
   }
+  const handleClick = (row, column) => {
+	  console.log('click', row, column);
+  }
+
   setTimeout(()=> {
     columns = [
       {
@@ -21,7 +25,8 @@
         sortable: true,
         sticky: true,
         minWidth,
-      },
+        onClick: handleClick
+	  },
       {
         label: 'Name',
         field: 'name',
@@ -126,7 +131,7 @@
         on:headerCustomHandler={headerCustomHandler}
         paginated = {true}
         searchable={true}
-        {fuseConfig}
+
         itemsPerPages = {[5,10]}
         {columns}
         {rows}/>

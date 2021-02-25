@@ -15,8 +15,8 @@
     export let itemsPerPages = [5,10,15];
 
     export let searchable = false;
-    export let fuseConfig = {
-    }
+    export let fuseConfig ={};
+    export let onRowClick;
 
     let paginator = {
         startIndex: 0,
@@ -36,6 +36,7 @@
             updatePaginatedRows(paginator);
         }
     }
+
     $: {
         if (rows) {
             initStates();
@@ -45,8 +46,21 @@
     function initStates() {
         initColumnProperties(columns);
         initPaginator();
-        fuse = new Fuse(rows, fuseConfig || {});
         initPreprocessRows(rows);
+        if(searchable) {
+        	if(fuseConfig) {
+        		console.log('prop fuseConfig', fuseConfig)
+        		fuse = new Fuse(rows, fuseConfig);
+            } else {
+        		let nonSearchableFields = columns
+                        .filter(column => column.searchable === false)
+                        .map(column => column.field);
+        		let searchableFields = columns
+                        .map(column => column.field)
+                        .filter(field => !nonSearchableFields.includes(field));
+                fuse = new Fuse(rows, {keys: searchableFields});
+            }
+        }
         updatePaginatedRows(paginator);
         initStickyStates(columns);
     }
@@ -170,6 +184,7 @@
         resetSorts();
         columns = columns;
     }
+
 </script>
 
 <style>
@@ -259,14 +274,15 @@
                             {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
                             &ShortDownArrow;
                             {/if}
+
                         </th>
                     {/each}
                 </tr>
-                </thead>
+            </thead>
 
                 <tbody>
                 {#each processedRows.paginated as row, rowIndex}
-                    <tr>
+                    <tr on:click={() => onRowClick && onRowClick(row)}>
                         {#each columns as column, columnIndex}
                             <td class="dt-table-body-td-style
                                   {column.sticky ? 'sticky': ''}"
@@ -276,7 +292,7 @@
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
                                 {:else}
-                                    {_.get(row, column.field, null)}
+                                    {@html _.get(row, column.field, null)}
                                 {/if}
                             </td>
                         {/each}
