@@ -35,7 +35,7 @@ interface Column {
     field: string, // property on rows to display;accessed by _.get
     component?: SvelteComponent //must export row, column rowIndex and columnIndex  to have scopes 
     headerComponent?: SvelteComponent // must export column and columnIndex  to have scopes     
-    sortable?: boolean,
+    sortable?: boolean, // false by default
     searchable?: boolean, // true by default
     numeric?: boolean,
     sticky?: boolean,

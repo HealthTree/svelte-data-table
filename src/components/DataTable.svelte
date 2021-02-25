@@ -15,7 +15,7 @@
     export let itemsPerPages = [5,10,15];
 
     export let searchable = false;
-    export let fuseConfig ={};
+    export let fuseConfig = {};
     export let onRowClick;
 
     let paginator = {
@@ -47,23 +47,28 @@
         initColumnProperties(columns);
         initPaginator();
         initPreprocessRows(rows);
-        if(searchable) {
-        	if(fuseConfig) {
-        		console.log('prop fuseConfig', fuseConfig)
-        		fuse = new Fuse(rows, fuseConfig);
-            } else {
-        		let nonSearchableFields = columns
-                        .filter(column => column.searchable === false)
-                        .map(column => column.field);
-        		let searchableFields = columns
-                        .map(column => column.field)
-                        .filter(field => !nonSearchableFields.includes(field));
-                fuse = new Fuse(rows, {keys: searchableFields});
-            }
-        }
+        initFuseSearch()
         updatePaginatedRows(paginator);
         initStickyStates(columns);
     }
+	function initFuseSearch(){
+		const finalConfig = _.cloneDeep(fuseConfig);
+		if(searchable) {
+			if(!finalConfig.keys) {
+				let nonSearchableFields = columns
+					.filter(column => {
+						console.log(!!column.searchable)
+						return !!column.searchable
+					})
+					.map(column => column.field);
+				let searchableFields = columns
+					.map(column => column.field)
+					.filter(field => !nonSearchableFields.includes(field));
+				finalConfig.keys = searchableFields;
+			}
+		}
+		fuse = new Fuse(rows, finalConfig);
+	}
     function initPaginator() {
         paginator.startIndex = 0;
         paginator.endIndex = (paginated) ? itemsPerPages[0]: rows.length;
@@ -94,6 +99,7 @@
                 top: auto;
                 position: absolute;
                 width: ${stickyColumnWidth}px;
+                height: 100%;
             `;
         }
         return '';
@@ -274,7 +280,6 @@
                             {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
                             &ShortDownArrow;
                             {/if}
-
                         </th>
                     {/each}
                 </tr>
@@ -288,6 +293,7 @@
                                   {column.sticky ? 'sticky': ''}"
                                 style= "{setMinWidth(column)}
                                         {setThTdStickiness(column)}"
+                                on:click={() => column.onClick && column.onClick(row, column)}
                             >
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
