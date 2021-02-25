@@ -1,5 +1,5 @@
 {
-	"name": "svelte-data-table",
+	"name": "@diegofhe/svelte-data-table",
 	"description": "svelte-data-table",
 	"svelte": "src/components/components.module.js",
 	"module": "dist/index.min.mjs",
