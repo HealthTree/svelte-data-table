@@ -57,7 +57,6 @@
 			if(!finalConfig.keys) {
 				let nonSearchableFields = columns
 					.filter(column => {
-						console.log(!!column.searchable)
 						return !!column.searchable
 					})
 					.map(column => column.field);
