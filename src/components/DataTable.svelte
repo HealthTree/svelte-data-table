@@ -62,7 +62,7 @@
 					.map(column => column.field);
 				let searchableFields = columns
 					.map(column => column.field)
-					.filter(field => !nonSearchableFields.includes(field));
+					.filter(field => field && !nonSearchableFields.includes(field));
 				finalConfig.keys = searchableFields;
 			}
 		}
