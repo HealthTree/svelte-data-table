@@ -27,10 +27,10 @@
     }
 
     $: {
-        if (pageSize || currentPageIndex != null) {
-            currentPageIndexChange();
-        }
-    }
+    	if(currentPageIndex !== null) {
+			currentPageIndexChange(currentPageIndex, pageSize, totalItems);
+		}
+	}
 
     function initPaginator(){
         pageSize = itemsPerPages[0];
@@ -43,7 +43,7 @@
     function calculateFrom(currentPageIndex, pageSize){
     	return (currentPageIndex * pageSize) + 1;
     }
-    function calculateTo(currentPageIndex, pageSize){
+    function calculateTo(currentPageIndex, pageSize, totalItems){
         const to = (currentPageIndex + 1) * pageSize;
         return to <= totalItems ? to : totalItems
     }
@@ -62,9 +62,9 @@
             currentPageIndex = currentPageIndex + 1;
         }
     }
-    function currentPageIndexChange(){
+    function currentPageIndexChange(currentPageIndex, pageSize, totalItems){
         from = calculateFrom(currentPageIndex, pageSize);
-        to = calculateTo(currentPageIndex, pageSize);
+        to = calculateTo(currentPageIndex, pageSize, totalItems);
         dispatch('paginatorChange', {
             currentPageIndex,
             pageSize,
