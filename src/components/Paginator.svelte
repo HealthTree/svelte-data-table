@@ -40,7 +40,8 @@
     function calculateTotalPages(totalItems, pageSize) {
         return Math.ceil(totalItems / pageSize);
     }
-    function calculateFrom(currentPageIndex, pageSize){
+    function calculateFrom(currentPageIndex, pageSize, totalItems){
+    	if (totalItems === 0) return 0
     	return (currentPageIndex * pageSize) + 1;
     }
     function calculateTo(currentPageIndex, pageSize, totalItems){
@@ -63,7 +64,7 @@
         }
     }
     function currentPageIndexChange(currentPageIndex, pageSize, totalItems){
-        from = calculateFrom(currentPageIndex, pageSize);
+        from = calculateFrom(currentPageIndex, pageSize, totalItems);
         to = calculateTo(currentPageIndex, pageSize, totalItems);
         dispatch('paginatorChange', {
             currentPageIndex,
