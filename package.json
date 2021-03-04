@@ -1,6 +1,7 @@
 {
-	"name": "@diegofhe/svelte-data-table",
+	"name": "@HealthTree/svelte-data-table",
 	"description": "svelte-data-table",
+	"homepage": "https://github.com/Healthtree/svelte-data-table/blob/master/README.md",
 	"svelte": "src/components/components.module.js",
 	"module": "dist/index.min.mjs",
 	"main": "dist/index.min.js",
