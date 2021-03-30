@@ -1,15 +1,11 @@
 {
-	"name": "@HealthTree/svelte-data-table",
+	"name": "@healthtree/svelte-data-table",
 	"description": "svelte-data-table",
 	"homepage": "https://github.com/Healthtree/svelte-data-table/blob/master/README.md",
 	"svelte": "src/components/components.module.js",
 	"module": "dist/index.min.mjs",
 	"main": "dist/index.min.js",
 	"version": "1.0.1",
-	"dependencies": {
-		"fuse.js": "5.2.2",
-		"lodash-es": "4.17.15"
-	},
 	"devDependencies": {
 		"@babel/core": "7.9.0",
 		"@babel/plugin-syntax-dynamic-import": "7.8.3",
@@ -70,5 +66,9 @@
 		"prepublishOnly": "npm run build",
 		"start": "sirv public",
 		"test": "start-server-and-test dev http://localhost:5000 cy:run"
+	},
+	"dependencies": {
+		"fuse.js": "5.2.2",
+		"lodash": "4.17.15"
 	}
 }
