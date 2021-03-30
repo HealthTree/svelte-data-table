@@ -1,6 +1,6 @@
 <script>
-    import _ from 'lodash';
-    import Paginator, {resetPaginator} from './Paginator.svelte';
+    import { cloneDeep, get } from 'lodash-es';
+    import Paginator, { resetPaginator } from './Paginator.svelte';
     import Search from './Search.svelte';
     import Fuse  from 'fuse.js';
     import { createEventDispatcher } from 'svelte';
@@ -52,7 +52,7 @@
         initStickyStates(columns);
     }
 	function initFuseSearch(){
-		const finalConfig = _.cloneDeep(fuseConfig);
+		const finalConfig = cloneDeep(fuseConfig);
 		if(searchable) {
 			if(!finalConfig.keys) {
 				let nonSearchableFields = columns
@@ -178,7 +178,7 @@
         }
     };
     function search(event) {
-        const searchKey = _.get(event, 'detail.searchKey');
+        const searchKey = get(event, 'detail.searchKey');
         if (searchKey === '' || !searchKey) {
             processedRows.filtered = [...rows];
         } else {
@@ -273,10 +273,10 @@
                                 {column.label}
                             {/if}
 
-                            {#if _.get(column, '_dTProperties.currentSort') === 'asc'}
+                            {#if get(column, '_dTProperties.currentSort') === 'asc'}
                             &ShortUpArrow;
                             {/if}
-                            {#if _.get(column, '_dTProperties.currentSort') === 'desc'}
+                            {#if get(column, '_dTProperties.currentSort') === 'desc'}
                             &ShortDownArrow;
                             {/if}
                         </th>
@@ -297,7 +297,7 @@
                                 {#if column.component}
                                     <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
                                 {:else}
-                                    {@html _.get(row, column.field, null)}
+                                    {@html get(row, column.field, null)}
                                 {/if}
                             </td>
                         {/each}

@@ -3,8 +3,7 @@
 </script>
 
 <script>
-    import _ from 'lodash';
-    import { onMount } from 'svelte';
+    import { range } from 'lodash-es';
     import { createEventDispatcher } from 'svelte';
 
     export let itemsPerPages;
@@ -51,7 +50,7 @@
     resetPaginator = function() {
         currentPageIndex = 0;
         pages = calculateTotalPages(totalItems, pageSize);
-        pagesArray = _.range(pages);
+        pagesArray = range(pages);
     }
     function handleLess(){
     	if(currentPageIndex !== 0){

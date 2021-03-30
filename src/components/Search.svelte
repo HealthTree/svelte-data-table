@@ -1,5 +1,5 @@
 <script>
-    import _ from 'lodash';
+    import { debounce } from 'lodash-es';
     import { createEventDispatcher } from 'svelte';
     import { onMount } from 'svelte';
     import { onDestroy } from 'svelte';
@@ -7,9 +7,6 @@
 
     let searchKey;
     let dtInput;
-    let fuseOptions ={
-        shouldSort: false
-    }
 
     function callSearch() {
         dispatch('search', {
@@ -18,7 +15,7 @@
     }
     onMount(() => {
     	dtInput = document.getElementById('dtInput');
-    	dtInput.addEventListener('keyup', _.debounce(callSearch , 500))
+    	dtInput.addEventListener('keyup', debounce(callSearch , 500))
     });
     onDestroy(() => {
     	if(dtInput) dtInput.removeEventListener('keyup', ()=>{});
