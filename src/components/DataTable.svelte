@@ -139,20 +139,20 @@
             }
         }
     }
-    function compareStr(a, b, type, field) {
-        if (type === 'asc') {
-            return ('' + a[field]).localeCompare(b[field]);
-        } else {
-            return ('' + b[field]).localeCompare(a[field]);
-        }
-    }
-    function sortNumeric(a, b, type, field) {
-        if (type === 'asc') {
-            return a[field] - b[field];
-        } else {
-            return b[field] - a[field];
-        }
-    }
+	function compareStr(a, b, type, field) {
+		if (type === 'asc') {
+			return ('' + get(a, field)).localeCompare(get(b, field));
+		} else {
+			return ('' + get(b, field)).localeCompare(get(a, field));
+		}
+	}
+	function sortNumeric(a, b, type, field) {
+		if (type === 'asc') {
+			return get(a, field) - get(b, field);
+		} else {
+			return get(b, field) - get(a, field);
+		}
+	}
     function onHeaderClick(columnIndex, column) {
         dispatch('headerClick', {
             columnIndex,

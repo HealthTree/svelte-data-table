@@ -6,8 +6,8 @@
 
   let columns = [];
   let rows = [
-    { name: 'AA', lastName: 'Franco', provider: 'github.com', socialNetwork: 'facebook.com' },
-    { name: 'a', lastName: '1', provider: 'github.com', socialNetwork: 'facebook.com' },
+    { name: 'AA', lastName: 'Franco', data: {provider: 'github.com'}, socialNetwork: 'facebook.com' },
+    { name: 'a', lastName: '1', data: {provider: 'github.com'}, socialNetwork: 'facebook.com' },
   ];
 
   const handleClick = (row, column) => {
@@ -41,7 +41,7 @@
       },
       {
         label: 'fav provider',
-        field: 'provider',
+        field: 'data.provider',
         component: CustomCol1,
         sortable: true,
         minWidth,
@@ -97,21 +97,21 @@
       },
     ];
     rows = [
-      { name: 'Diego', id: 0, provider: 'github.com', socialNetwork: '1facebook.com' },
-      { name: 'a', id: 1, provider: 'github.com', socialNetwork: '2facebook.com' },
-      { name: 'b', id: 2, provider: 'github.com', socialNetwork: '3facebook.com' },
-      { name: 'c', id: 3, provider: 'github.com', socialNetwork: '4facebook.com' },
-      { name: 'd', id: 4, provider: 'github.com', socialNetwork: '5facebook.com' },
-      { name: 'e', id: 5, provider: 'github.com', socialNetwork: '6facebook.com' },
-      { name: 'f', id: 6, provider: 'github.com', socialNetwork: '7facebook.com' },
-      { name: 'g', id: 7, provider: 'github.com', socialNetwork: '8facebook.com' },
-      { name: 'jan', id: 8, provider: 'github.com', socialNetwork: '9facebook.com' },
-      { name: 'jna', id: 9, provider: 'github.com', socialNetwork: '10facebook.com' },
-      { name: 'janu', id: 10, provider: 'github.com', socialNetwork: '11facebook.com' },
-      { name: 'jua ablo', id: 11, provider: 'github.com', socialNetwork: '12facebook.com' },
-      { name: 'uan Pablo', id: 12, provider: 'github.com', socialNetwork: '13facebook.com' },
-      { name: 'Juan Pablo', id: 13, provider: 'gitlab.com', socialNetwork: '14google+.com' },
-      { name: 'Juan Pablo', id: 14, provider: 'gitlab.com', socialNetwork: '15google+.com' },
+      { name: 'Diego', id: 0, data: {provider: 'github.com'}, socialNetwork: '1facebook.com' },
+      { name: 'a', id: 1, data: {provider: 'github.com'}, socialNetwork: '2facebook.com' },
+      { name: 'b', id: 2, data: {provider: 'github.com'}, socialNetwork: '3facebook.com' },
+      { name: 'c', id: 3, data: {provider: 'github.com'}, socialNetwork: '4facebook.com' },
+      { name: 'd', id: 4, data: {provider: 'github.com'}, socialNetwork: '5facebook.com' },
+      { name: 'e', id: 5, data: {provider: 'github.com'}, socialNetwork: '6facebook.com' },
+      { name: 'f', id: 6, data: {provider: 'github.com'}, socialNetwork: '7facebook.com' },
+      { name: 'g', id: 7, data: {provider: 'github.com'}, socialNetwork: '8facebook.com' },
+      { name: 'jan', id: 8, data: {provider: 'github.com'}, socialNetwork: '9facebook.com' },
+      { name: 'jna', id: 9, data: {provider: 'github.com'}, socialNetwork: '10facebook.com' },
+      { name: 'janu', id: 10, data: {provider: 'github.com'}, socialNetwork: '11facebook.com' },
+      { name: 'jua ablo', id: 11, data: {provider: 'github.com'}, socialNetwork: '12facebook.com' },
+      { name: 'uan Pablo', id: 12, data: {provider: 'github.com'}, socialNetwork: '13facebook.com' },
+      { name: 'Juan Pablo', id: 13, data: {provider: 'gitlab.com'}, socialNetwork: '14google+.com' },
+      { name: 'Juan Pablo', id: 14, data: {provider: 'gitlab.com'}, socialNetwork: '15google+.com' },
     ];
   }, 2)
 </script>

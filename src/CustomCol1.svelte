@@ -1,5 +1,6 @@
 <script>
-    export let row;
+	import { get } from 'lodash-es';
+	export let row;
     export let column;
     export let rowIndex;
     export let columnIndex;
@@ -11,4 +12,4 @@
     }
 </style>
 
-<div class="info">{row[column.field]} rowIndex: {rowIndex} colIndex:{columnIndex}</div>
+<div class="info">{get(row, column.field)} rowIndex: {rowIndex} colIndex:{columnIndex}</div>
