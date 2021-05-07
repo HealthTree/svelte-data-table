@@ -132,7 +132,7 @@
         if (column.sortFnc) {
             processedRows.filtered = processedRows.filtered.sort((a, b) => column.sortFnc(a, b, currentSort));
         } else {
-            if (column.numeric) {
+            if (column.type === 'number' || column.type === 'date') {
                 processedRows.filtered = processedRows.filtered.sort((a, b) => sortNumeric(a, b, currentSort, field));
             } else {
                 processedRows.filtered = processedRows.filtered.sort((a, b) => compareStr(a, b, currentSort, field));
@@ -141,16 +141,16 @@
     }
 	function compareStr(a, b, type, field) {
 		if (type === 'asc') {
-			return ('' + get(a, field)).localeCompare(get(b, field));
-		} else {
 			return ('' + get(b, field)).localeCompare(get(a, field));
+		} else {
+			return ('' + get(a, field)).localeCompare(get(b, field));
 		}
 	}
 	function sortNumeric(a, b, type, field) {
 		if (type === 'asc') {
-			return get(a, field) - get(b, field);
-		} else {
 			return get(b, field) - get(a, field);
+		} else {
+			return get(a, field) - get(b, field);
 		}
 	}
     function onHeaderClick(columnIndex, column) {

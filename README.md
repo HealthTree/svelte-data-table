@@ -37,7 +37,7 @@ interface Column {
     headerComponent?: SvelteComponent // must export column and columnIndex  to have scopes     
     sortable?: boolean, // false by default
     searchable?: boolean, // true by default
-    numeric?: boolean,
+    type?: string, // string by default can be: number | date
     sticky?: boolean,
     sortFnc?: 'function' // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
 }
