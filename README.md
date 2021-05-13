@@ -2,13 +2,13 @@
 
 This is a reactive svelte-datatable. Feats:
 
+- In reactive: If you change rows, the dataTable updates accordingly
+- FrontEnd paginator
+- FrontEnd included Searchbar
+- You can pass SvelteComponent to render on a column
+- You can pass SvelteComponent to render a header
+- Sticky 1 column (can sticky just 1 col for now)
 
-  - In reactive: If you change rows, the dataTable updates accordingly
-  - FrontEnd paginator
-  - FrontEnd included Searchbar
-  - You can pass SvelteComponent to render on a column
-  - You can pass SvelteComponent to render a header
-  - Sticky 1 column (can sticky just 1 col for now)
 ## Documentation
 
 |Param|type|Required|Default|
@@ -25,29 +25,30 @@ searchable = false in the column definition.
 
 Custom fuse parameters may also be provided through the fuseConfig prop
 
-
 ## Interfaces
 
 ```typescript
-interface SvelteComponent{}
+interface SvelteComponent {
+}
+
 interface Column {
-    label:string, // header of column
-    field: string, // property on rows to display;accessed by _.get
-    component?: SvelteComponent //must export row, column rowIndex and columnIndex  to have scopes 
-    headerComponent?: SvelteComponent // must export column and columnIndex  to have scopes     
-    sortable?: boolean, // false by default
-    searchable?: boolean, // true by default
-    type?: string, // string by default can be: number | date
-    sticky?: boolean,
-    sortFnc?: 'function' // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
+	label: string, // header of column
+	field: string, // property on rows to display;accessed by _.get
+	component?: SvelteComponent //must export row, column rowIndex and columnIndex  to have scopes 
+	headerComponent?: SvelteComponent // must export column and columnIndex  to have scopes     
+	sortable?: boolean, // false by default
+	searchable?: boolean, // true by default
+	type?: string, // string by default can be: number | date
+	sticky?: boolean,
+	sortFnc?: 'function' // eg: (a,b, currentSort) => {}  currentSort can be asc|desc|null
+	transform?: 'function' // can also be an object --> see 'Transform' section below
 }
 ```
 
 ## CustomStyle
 
-Each element affected by css is divided by 2 clases: Layout and style. You can easily overwrite this css clases to
-make changes in style. We recomend only changing the styles ones which are:
-
+Each element affected by css is divided by 2 clases: Layout and style. You can easily overwrite this css clases to make
+changes in style. We recomend only changing the styles ones which are:
 
 |Component|Class|
 | ------ |-------|
@@ -64,6 +65,7 @@ make changes in style. We recomend only changing the styles ones which are:
 |Paginator|dt-paginator-arrows-style|
 
 ## DataTable Events Events
+
 |Name|Description|Notes|
 | ------ |-------|------|
 |headerClick|Sent  on clicking header with column and columnIndex as information| |
@@ -71,7 +73,7 @@ make changes in style. We recomend only changing the styles ones which are:
 
 ## Header Custom handler
 
-To make the table emit a headerCustomHandler event, the column.headerComponent must dispatch a event called 
+To make the table emit a headerCustomHandler event, the column.headerComponent must dispatch a event called
 headerCustomHandler to be forwarded to the datable.
 
 ```svelte
@@ -91,4 +93,108 @@ headerCustomHandler to be forwarded to the datable.
     <p on:click={onClick1}>Click1</p>
     <p on:click={onClick2}>Click2</p>
 </div>
+```
+
+## Transform
+
+### Interfaces
+
+```typescript
+transform: 'function' // (data) => { transform logic here }
+// or
+interface transform {
+	field?: string      // path of target to transform; Defaults to value stored in column.field; accessed by _.get
+	name?: string       // new location to store the transformed data; Defaults to value stored in 'column.field'
+						// accessed by _.set
+						// note that pre-transformed data still exists and is not overwritten
+
+	fnc: 'function'     // (data) => { transform logic here }
+}
+```
+
+### Example Code
+
+```javascript
+const rows = [
+	{
+		data: {
+			title: "   my Title ",
+			values: [0, 1, 2, 3, 4, 5]
+		}
+	}
+];
+const columns = [
+	{
+		// note that the original row object is not altered.
+		label: "Title",
+		field: "data.title",        // note that if this data does not exist, the value is set to 'null'
+		transform: (title) => {
+			return title.trim().toUpperCase() + '!!!';
+		}
+		//  new object returned after transform :
+		//      {
+		//          data: {
+		//              title: "MY TITLE!!!",
+		//              values: [0, 1, 2, 3, 4, 5]
+		//          }
+		//      }
+	},
+	{
+		// note that the original row object is not altered.
+		label: "transform as a function",
+		field: "data.values",
+		component: myComponent,         // optional svlete component : receives newly created, transformed object
+		transform: (valuesArray) => {
+			return valuesArray.reduce((a, b) => {
+				return a + b;
+			}, 0);
+		}
+		//  new object returned after transform :
+		//      {
+		//          data: {
+		//              title: "   my Title ",
+		//              values: 15
+		//          }
+		//      }
+
+	},
+	{
+		// this adds a little bit more flexibility, especially for use-cases with components
+		// note that the original row object is not altered.
+		label: "transform as an object",
+		field: "transformed.value",
+		component: myComponent,           // optional svelte component : receives newly created, transformed object
+		transform: {
+			field: 'data.values',           // note again that this defaults to the 'column.field' property
+			name: 'transformed.value',      // note that this path need not exist, and will be created on the fly.
+			fnc: (valuesArray) => {
+				return valuesArray.reduce((a, b) => {
+					return a + b;
+				}, 0);
+			}
+		}
+		//  new object returned after transform :
+		//      {
+		//          data: {
+		//              title: "   my Title ",
+		//              values: [0, 1, 2, 3, 4, 5]
+		//          },
+		//          transformed: {
+		//              value: 15
+		//          }
+		//      }
+	},
+	{
+		// this example works exactly the same as the first example "transform as a function"
+		label: "transform as an object -- example 2",
+		field: "data.values",
+		transform: {
+			fnc: (valuesArray) => {
+				return valuesArray.reduce((a, b) => {
+					return a + b;
+				}, 0);
+			}
+		}
+	}
+];
 ```

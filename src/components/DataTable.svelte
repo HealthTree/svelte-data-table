@@ -1,5 +1,5 @@
 <script>
-    import { cloneDeep, get } from 'lodash-es';
+    import { cloneDeep, get, set } from 'lodash-es';
     import Paginator, { resetPaginator } from './Paginator.svelte';
     import Search from './Search.svelte';
     import Fuse  from 'fuse.js';
@@ -190,6 +190,31 @@
         columns = columns;
     }
 
+
+	function applyTransform(row, field, transform) {
+    	if (typeof transform !== 'undefined' && !!field) {
+			const tempRow = cloneDeep(row);
+			let val;
+			if (typeof transform === 'function') {
+				val = get(tempRow, field, null);
+				if (val) set(tempRow, field, transform(val));
+			} else if (typeof transform === 'object' && !Array.isArray(transform)) {
+				const target = transform.field || field;
+				val = get(tempRow, target, null);
+				if (val) {
+					const path = transform.name || field;
+					set(tempRow, path, transform.fnc(val));
+				}
+			}
+			else {
+				throw new Error('transform is not configured correctly, please read the documentation')
+            }
+			if (!val) console.error(`the property 'row.${transform.field || field}' is undefined.\n\t\t assigning value to null`)
+			return tempRow;
+		}
+        return row;
+	}
+
 </script>
 
 <style>
@@ -295,9 +320,9 @@
                                 on:click={() => column.onClick && column.onClick(row, column)}
                             >
                                 {#if column.component}
-                                    <svelte:component this={column.component} {row} {column} {rowIndex} {columnIndex}/>
+                                    <svelte:component this={column.component} row={applyTransform(row, column.field, column.transform)} {column} {rowIndex} {columnIndex}/>
                                 {:else}
-                                    {@html get(row, column.field, null)}
+                                    {@html get(applyTransform(row, column.field, column.transform), column.field, null)}
                                 {/if}
                             </td>
                         {/each}
