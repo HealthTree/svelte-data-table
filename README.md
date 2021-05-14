@@ -110,6 +110,9 @@ interface transform {
 	cull?: boolean                  // defaults to false; flag to ONLY return an object containing the transformed data
 	fnc: 'function'                 // e.g. (data) => { transform logic here }
 }
+
+// if the property pointed to by 'field' or 'sourceField' is 
+// null or undefined, then transform does nothing
 ```
 
 ### Example Code
