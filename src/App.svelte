@@ -85,7 +85,6 @@
 					sourceField: 'data',
                     destinationField: 'data.obj.hello',
 					fnc: (data) => {
-						console.log(data);
 						if (!data.obj) data.obj = {hello: 'hey'};
                         data.obj.greeting = `${data.obj.hello} ${data.provider} : ${reduce((data.values)? data.values : [0])}`; // note that the side effect is not reflected in original data
                         return data.obj.hello.toUpperCase();
