@@ -214,12 +214,12 @@
 			let val;
 
 			if (typeof transform === 'function') {
-				val = get(tempRow, field, null);
+				val = get(tempRow, field);
 				if (val) set(tempRow, field, transform(val));
 
 			} else if (typeof transform === 'object' && !Array.isArray(transform)) {
 				const target = transform.sourceField || field;
-				val = get(tempRow, target, null);
+				val = get(tempRow, target);
 				if (transform.cull) tempRow = {};
 
 				if (val) {
@@ -229,7 +229,6 @@
 			} else {
 				throw new Error('transform is configured incorrectly, please read the documentation');
 			}
-			if (!val) console.error(`the property 'row.${transform.sourceField || field}' is undefined.`);
 			return tempRow;
 		}
 		return row;
