@@ -80,14 +80,15 @@
 			},
 			{
 				label: 'side effects don\'t alter original data',
-				field: 'data.obj.greeting',   // testing utilization of a side effect within transform
+				field: 'data.obj.greeting',
 				transform: {
 					sourceField: 'data',
-                    destinationField: 'data.obj.hello',
+                    destinationField: 'data',
 					fnc: (data) => {
 						if (!data.obj) data.obj = {hello: 'hey'};
                         data.obj.greeting = `${data.obj.hello} ${data.provider} : ${reduce((data.values)? data.values : [0])}`; // note that the side effect is not reflected in original data
-                        return data.obj.hello.toUpperCase();
+                        data.obj.hello = data.obj.hello.toUpperCase();
+                        return data;
                     }
 				},
 			},

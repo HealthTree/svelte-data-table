@@ -47,8 +47,8 @@ interface Column {
 
 ## CustomStyle
 
-Each element affected by css is divided by 2 clases: Layout and style. You can easily overwrite this css clases to make
-changes in style. We recomend only changing the styles ones which are:
+Each element affected by css is divided by 2 classes: Layout and style. You can easily overwrite this css classes to
+make changes in style. We recommend only changing the styles ones which are:
 
 |Component|Class|
 | ------ |-------|
@@ -73,7 +73,7 @@ changes in style. We recomend only changing the styles ones which are:
 
 ## Header Custom handler
 
-To make the table emit a headerCustomHandler event, the column.headerComponent must dispatch a event called
+To make the table emit a headerCustomHandler event, the column.headerComponent must dispatch an event called
 headerCustomHandler to be forwarded to the datable.
 
 ```svelte
@@ -101,7 +101,8 @@ headerCustomHandler to be forwarded to the datable.
 
 ```typescript
 // for all cases, note that pre-transformed data still exists and is never overwritten
-transform: 'function' // (data) => { transform logic here }
+
+transform: 'function' // e.g. (data) => { transform logic here }
 // or
 interface transform {
 	sourceField?: string            // accessed by _.get; path of target to transform; Defaults to value stored in column.field;
@@ -183,59 +184,63 @@ const columns = [
 	{
 		label: "culled transform",
 		field: "transformed.value",
-		component: myComponent,           // optional svelte component : receives newly created, transformed object
 		transform: {
 			sourceField: 'data.values',
 			destinationField: 'transformed.value',
-			cull: true,                                 // only return transformed values
-			fnc: (data) => {
-				data = reduce(data);
-				data *= 2;
-				return data;
-			}
+			cull: true,                   // only return transformed values
+			fnc: reduce
 		}
 		//  new object returned after transform :
 		//      {
 		//          transformed: {
-		//              value: 30
+		//              value: 15
 		//          }
 		//      }
 	},
 	{
 		// the object syntax adds a little bit more flexibility, especially for use-cases with components
-		// let's examing the scope and possible side-effects of our transform function
-
-		// note here that the field property is pointing to a location different than 
-		// the transform.destinationField property so if we were to set transform.cull to true,
-		// then field would be pointing to an undefined property.
-
-		label: "Examining Side Effects & Scope",
-		field: "data.obj.concat",
-		component: myComponent,           // optional svelte component : receives newly created, transformed object
+		label: "Examining Scope",
+		field: "transformed.obj.concat",
+		component: myComponent,
 		transform: {
-			sourceField: 'data',                    // note again that this defaults to the 'column.field' property
-			destinationField: 'data.obj.hello',     // note that this path need not exist, and will be created on the fly.
+			sourceField: 'data',                 // note again that this defaults to the 'column.field' property
+			destinationField: 'transformed',     // note that this path need not exist, and will be created on the fly.
 			fnc: (data) => {
 				if (!data.obj.hello) data.obj.hello = 'hello';
 				data.obj.concat = `${data.title.trim()} says '${data.obj.hello} ${data.obj.world}' : sum = ${reduce(data.values)}`;
-
-				// note that side effects like these are useful to format data for use in components, 
-				// but are NOT reflected in the original data
+				data.values.push(6);
 				data.title = trimAndCAPS(data.title);
-				return data.obj.hello.toUpperCase();
+				return data;
 			}
 		}
 		//  new object returned after transform :
 		//      {
 		//          data: {
-		//              title: "MY TITLE!!!",
+		//              title: "   my Title ",
 		//              values: [0, 1, 2, 3, 4, 5],
+		//              obj: { world: "world" },
+		//          }
+		//          transformed: {
+		//              title: "MY TITLE!!!",
+		//              values: [0, 1, 2, 3, 4, 5, 6],
 		//              obj: {
 		//                  concat: "my Title says 'hello world' : sum = 15",
-		//                  hello: "HELLO",
+		//                  hello: "hello",
 		//                  world: "world"
+		//              }
 		//          }
 		//      }
 	},
+	{
+		label: "truncating & overwriting side-effect of passing objects",
+		field: "data",
+		transform: (data) => {
+			return `there are ${reduce(data.values)} ${data.obj.world}s out there`;
+		}
+		//  new object returned after transform :
+		//      {
+		//          data: "there are 15 worlds out there"
+		//      }
+	}
 ];
 ```

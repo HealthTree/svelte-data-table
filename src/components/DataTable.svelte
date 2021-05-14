@@ -215,20 +215,23 @@
 
 			if (typeof transform === 'function') {
 				val = get(tempRow, field);
-				if (val) set(tempRow, field, transform(val));
+				if (val != null)
+					set(tempRow, field, transform(val));
 
 			} else if (typeof transform === 'object' && !Array.isArray(transform)) {
 				const target = transform.sourceField || field;
-				val = get(tempRow, target);
+                val = cloneDeep(get(tempRow, target));
+
 				if (transform.cull) tempRow = {};
 
-				if (val) {
+				if (val != null) {
 					const path = transform.destinationField || field;
 					set(tempRow, path, transform.fnc(val));
 				}
 			} else {
 				throw new Error('transform is configured incorrectly, please read the documentation');
 			}
+			console.log(tempRow);
 			return tempRow;
 		}
 		return row;
