@@ -79,25 +79,26 @@
 				minWidth,
 			},
 			{
-				label: 'transform as a function',
-				field: 'data.values',
-				transform: reduce
-
+				label: 'side effects don\'t alter original data',
+				field: 'data.obj.greeting',   // testing utilization of a side effect within transform
+				transform: {
+					sourceField: 'data',
+                    destinationField: 'data.obj.hello',
+					fnc: (data) => {
+						console.log(data);
+						if (!data.obj) data.obj = {hello: 'hey'};
+                        data.obj.greeting = `${data.obj.hello} ${data.provider} : ${reduce((data.values)? data.values : [0])}`; // note that the side effect is not reflected in original data
+                        return data.obj.hello.toUpperCase();
+                    }
+				},
 			},
 			{
 				label: 'transform as an object',
 				field: 'transformed.value',
 				transform: {
-					field: 'data.values',
-					name: 'transformed.value',
-					fnc: reduce
-				},
-			},
-			{
-				// this example should work exactly the same as "transform as a function"
-				label: 'transform as an object -- example 2',
-				field: 'data.values',
-				transform: {
+					sourceField: 'data.values',
+					destinationField: 'transformed.value',
+                    cull: true,
 					fnc: reduce
 				},
 			},
@@ -109,15 +110,19 @@
 				data: {
 					provider: 'github.com',
 					values: [5, 6, 7, 8, 9, 10],
+                    obj: {
+						hello: "hello",
+                        world: "world"
+                    }
 				},
 				socialNetwork: '1facebook.com',
 				date: randomDate(),
 			},
 			{
-				name: 'andrew',
+				name: '   andrew  ',
 				id: 1,
 				data: {
-					provider: 'github.com',
+					provider: 'yahoo.com',
 					values: [0, 1, 2, 3, 4, 5],
 				},
 				socialNetwork: '2facebook.com',

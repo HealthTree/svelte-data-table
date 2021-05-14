@@ -100,15 +100,14 @@ headerCustomHandler to be forwarded to the datable.
 ### Interfaces
 
 ```typescript
+// for all cases, note that pre-transformed data still exists and is never overwritten
 transform: 'function' // (data) => { transform logic here }
 // or
 interface transform {
-	field?: string      // path of target to transform; Defaults to value stored in column.field; accessed by _.get
-	name?: string       // new location to store the transformed data; Defaults to value stored in 'column.field'
-						// accessed by _.set
-						// note that pre-transformed data still exists and is not overwritten
-
-	fnc: 'function'     // (data) => { transform logic here }
+	sourceField?: string            // accessed by _.get; path of target to transform; Defaults to value stored in column.field;
+	destinationField?: string       // accessed by _.set; new location to store the transformed data; Defaults to value stored in 'column.field';
+	cull?: boolean                  // defaults to false; flag to ONLY return an object containing the transformed data
+	fnc: 'function'                 // e.g. (data) => { transform logic here }
 }
 ```
 
@@ -119,82 +118,124 @@ const rows = [
 	{
 		data: {
 			title: "   my Title ",
-			values: [0, 1, 2, 3, 4, 5]
+			values: [0, 1, 2, 3, 4, 5],
+			obj: {
+				world: "world"
+			}
 		}
 	}
 ];
+
+function trimAndCAPS(title) {
+	return title.trim().toUpperCase() + '!!!';
+}
+
+function reduce(valuesArray) {
+	return valuesArray.reduce((a, b) => {
+		return a + b;
+	}, 0);
+}
+
 const columns = [
 	{
-		// note that the original row object is not altered.
 		label: "Title",
 		field: "data.title",        // note that if this data does not exist, the value is set to 'null'
-		transform: (title) => {
-			return title.trim().toUpperCase() + '!!!';
-		}
+		component: myComponent,     // optional svelte component : receives newly created, transformed object
+		transform: trimAndCAPS
 		//  new object returned after transform :
 		//      {
 		//          data: {
 		//              title: "MY TITLE!!!",
-		//              values: [0, 1, 2, 3, 4, 5]
+		//              values: [0, 1, 2, 3, 4, 5],
+		//              obj: { world: "world" },
 		//          }
 		//      }
 	},
 	{
-		// note that the original row object is not altered.
-		label: "transform as a function",
-		field: "data.values",
-		component: myComponent,         // optional svlete component : receives newly created, transformed object
-		transform: (valuesArray) => {
-			return valuesArray.reduce((a, b) => {
-				return a + b;
-			}, 0);
+		// this example works exactly the same as example above
+		label: "transform as an object -- example 2",
+		field: "data.title",
+		transform: {
+			fnc: trimAndCAPS
 		}
-		//  new object returned after transform :
-		//      {
-		//          data: {
-		//              title: "   my Title ",
-		//              values: 15
-		//          }
-		//      }
-
 	},
 	{
-		// this adds a little bit more flexibility, especially for use-cases with components
-		// note that the original row object is not altered.
-		label: "transform as an object",
-		field: "transformed.value",
+		label: "Storing Transform Separately",
+		field: "transformed.value",       // set default field to look at the newly created 'transformed.value' propery
 		component: myComponent,           // optional svelte component : receives newly created, transformed object
 		transform: {
-			field: 'data.values',           // note again that this defaults to the 'column.field' property
-			name: 'transformed.value',      // note that this path need not exist, and will be created on the fly.
-			fnc: (valuesArray) => {
-				return valuesArray.reduce((a, b) => {
-					return a + b;
-				}, 0);
-			}
+			sourceField: 'data.values',                 // note again that this defaults to the 'column.field' property
+			destinationField: 'transformed.value',      // note that this path need not exist, and will be created on the fly.
+			fnc: reduce
 		}
 		//  new object returned after transform :
 		//      {
 		//          data: {
 		//              title: "   my Title ",
-		//              values: [0, 1, 2, 3, 4, 5]
-		//          },
+		//              values: [0, 1, 2, 3, 4, 5],
+		//              obj: { world: "world" },
+		//          }
 		//          transformed: {
 		//              value: 15
 		//          }
 		//      }
 	},
 	{
-		// this example works exactly the same as the first example "transform as a function"
-		label: "transform as an object -- example 2",
-		field: "data.values",
+		label: "culled transform",
+		field: "transformed.value",
+		component: myComponent,           // optional svelte component : receives newly created, transformed object
 		transform: {
-			fnc: (valuesArray) => {
-				return valuesArray.reduce((a, b) => {
-					return a + b;
-				}, 0);
+			sourceField: 'data.values',
+			destinationField: 'transformed.value',
+			cull: true,                                 // only return transformed values
+			fnc: (data) => {
+				data = reduce(data);
+				data *= 2;
+				return data;
 			}
 		}
-	}
+		//  new object returned after transform :
+		//      {
+		//          transformed: {
+		//              value: 30
+		//          }
+		//      }
+	},
+	{
+		// the object syntax adds a little bit more flexibility, especially for use-cases with components
+		// let's examing the scope and possible side-effects of our transform function
+
+		// note here that the field property is pointing to a location different than 
+		// the transform.destinationField property so if we were to set transform.cull to true,
+		// then field would be pointing to an undefined property.
+
+		label: "Examining Side Effects & Scope",
+		field: "data.obj.concat",
+		component: myComponent,           // optional svelte component : receives newly created, transformed object
+		transform: {
+			sourceField: 'data',                    // note again that this defaults to the 'column.field' property
+			destinationField: 'data.obj.hello',     // note that this path need not exist, and will be created on the fly.
+			fnc: (data) => {
+				if (!data.obj.hello) data.obj.hello = 'hello';
+				data.obj.concat = `${data.title.trim()} says '${data.obj.hello} ${data.obj.world}' : sum = ${reduce(data.values)}`;
+
+				// note that side effects like these are useful to format data for use in components, 
+				// but are NOT reflected in the original data
+				data.title = trimAndCAPS(data.title);
+				return data.obj.hello.toUpperCase();
+			}
+		}
+		//  new object returned after transform :
+		//      {
+		//          data: {
+		//              title: "MY TITLE!!!",
+		//              values: [0, 1, 2, 3, 4, 5],
+		//              obj: {
+		//                  concat: "my Title says 'hello world' : sum = 15",
+		//                  hello: "HELLO",
+		//                  world: "world"
+		//          }
+		//      }
+	},
 ];
 ```
