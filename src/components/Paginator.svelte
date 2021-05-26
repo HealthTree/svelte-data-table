@@ -97,10 +97,7 @@
 
     }
     .dt-paginator-arrows-style{
-        padding-top: 10px;
-        font-size: 30px;
-        position: relative;
-        margin-top: 8px;
+        font-size: 40px;
         cursor: pointer;
     }
 </style>
@@ -121,7 +118,7 @@
     </div>
     <div class="dt-paginator-current-page-style">
         <div class="dt-paginator-arrows-style" on:click="{() => handleLess()}">
-            &#x2C2
+            <i class="material-icons">navigate_before</i>
         </div>
         <select bind:value={currentPageIndex} >
             {#each pagesArray as page}
@@ -131,7 +128,7 @@
             {/each}
         </select>
         <div class="dt-paginator-arrows-style" on:click="{() => handleMore()}">
-            &#x2C3
+            <i class="material-icons">navigate_next</i>
         </div>
     </div>
 </div>

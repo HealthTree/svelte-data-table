@@ -25,6 +25,12 @@ searchable = false in the column definition.
 
 Custom fuse parameters may also be provided through the fuseConfig prop
 
+## Icons
+
+This project uses material icons, this dependency need to be installed on the project that use svelte-data-table
+
+Follow the instructions [here](https://developers.google.com/fonts/docs/material_icons)
+
 ## Interfaces
 
 ```typescript
