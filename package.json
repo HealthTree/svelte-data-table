@@ -69,6 +69,6 @@
 	},
 	"dependencies": {
 		"fuse.js": "5.2.2",
-		"lodash-es": "4.17.15"
+		"lodash-es": "4.17.21"
 	}
 }
